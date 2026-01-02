@@ -1,0 +1,25 @@
+{
+  "brand": "ALKAYA",
+  "nav": {
+    "home": "Inicio",
+    "blog": "Blog",
+    "courses": "Cursos",
+    "resources": "Recursos",
+    "pricing": "Planes",
+    "checkout": "Checkout",
+    "profile": "Perfil"
+  },
+  "cta": {
+    "login": "Ingresar",
+    "signup": "Crear cuenta",
+    "dashboard": "Ir al panel"
+  },
+  "hero": {
+    "title": "Formación premium para equipos que exigen excelencia",
+    "subtitle": "ALKAYA combina contenido curado, seguimiento y analítica para acelerar resultados reales."
+  },
+  "labels": {
+    "language": "Idioma",
+    "roles": "Roles"
+  }
+}

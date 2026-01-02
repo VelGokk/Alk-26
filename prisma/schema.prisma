@@ -1,0 +1,452 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  INSTRUCTOR
+  REVIEWER
+  MODERATOR
+  USER
+  SUBSCRIBER
+}
+
+enum CourseStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  REJECTED
+  ARCHIVED
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ResourceType {
+  PDF
+  IMAGE
+  VIDEO
+  OTHER
+}
+
+enum LessonContentType {
+  VIDEO
+  TEXT
+  QUIZ
+  LIVE
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELED
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  MERCADOPAGO
+  MANUAL
+}
+
+enum CouponType {
+  PERCENT
+  FIXED
+}
+
+enum LogLevel {
+  INFO
+  WARN
+  ERROR
+}
+
+enum ModerationTargetType {
+  USER
+  COMMENT
+}
+
+enum ModerationStatus {
+  OPEN
+  IN_REVIEW
+  RESOLVED
+}
+
+enum ModerationActionType {
+  HIDE
+  WARN
+  RESOLVE
+}
+
+model User {
+  id             String           @id @default(cuid())
+  name           String?
+  email          String           @unique
+  emailVerified  DateTime?
+  image          String?
+  passwordHash   String?
+  role           Role             @default(USER)
+  isActive       Boolean          @default(true)
+  locale         String           @default("es-ar")
+  lastLoginAt    DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  accounts       Account[]
+  sessions       Session[]
+  courses        Course[]         @relation("InstructorCourses")
+  reviews        CourseReview[]   @relation("ReviewerCourses")
+  enrollments    Enrollment[]
+  payments       Payment[]
+  cart           Cart?
+  comments       Comment[]
+  reports        ModerationReport[] @relation("ReporterReports")
+  moderationActions ModerationAction[] @relation("ModeratorActions")
+  logs           SystemLog[]
+  blogPosts      BlogPost[]
+  couponsCreated Coupon[]         @relation("CouponCreator")
+  liveSessions   LiveSession[]    @relation("LiveSessionCreator")
+
+  @@index([role])
+  @@index([isActive])
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Course {
+  id            String        @id @default(cuid())
+  title         String
+  slug          String        @unique
+  description   String
+  price         Int           @default(0)
+  currency      String        @default("ARS")
+  thumbnailUrl  String?
+  status        CourseStatus  @default(DRAFT)
+  instructorId  String
+  reviewerId    String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  instructor    User          @relation("InstructorCourses", fields: [instructorId], references: [id])
+  modules       CourseModule[]
+  resources     CourseResource[]
+  enrollments   Enrollment[]
+  cartItems     CartItem[]
+  reviews       CourseReview[]
+  comments      Comment[]
+
+  @@index([status])
+  @@index([instructorId])
+}
+
+model CourseModule {
+  id        String   @id @default(cuid())
+  title     String
+  order     Int      @default(0)
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  course  Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@index([courseId])
+}
+
+model Lesson {
+  id          String           @id @default(cuid())
+  title       String
+  content     String?
+  contentType LessonContentType @default(TEXT)
+  videoUrl    String?
+  order       Int              @default(0)
+  durationMin Int?
+  moduleId    String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  module   CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress LessonProgress[]
+
+  @@index([moduleId])
+}
+
+model CourseResource {
+  id           String       @id @default(cuid())
+  title        String
+  type         ResourceType @default(OTHER)
+  url          String
+  courseId     String
+  uploadedById String?
+  createdAt    DateTime     @default(now())
+
+  course     Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  uploadedBy User?   @relation(fields: [uploadedById], references: [id])
+
+  @@index([courseId])
+}
+
+model CourseReview {
+  id         String       @id @default(cuid())
+  courseId   String
+  reviewerId String
+  status     ReviewStatus @default(PENDING)
+  comment    String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  reviewer User   @relation("ReviewerCourses", fields: [reviewerId], references: [id])
+
+  @@index([status])
+}
+
+model Enrollment {
+  id              String           @id @default(cuid())
+  userId          String
+  courseId        String
+  status          EnrollmentStatus @default(ACTIVE)
+  progressPercent Int              @default(0)
+  purchasedAt     DateTime         @default(now())
+  completedAt     DateTime?
+  paymentId       String?
+
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  payment  Payment? @relation(fields: [paymentId], references: [id])
+  progress LessonProgress[]
+
+  @@unique([userId, courseId])
+}
+
+model LessonProgress {
+  id            String   @id @default(cuid())
+  enrollmentId  String
+  lessonId      String
+  completed     Boolean  @default(false)
+  completedAt   DateTime?
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lesson     Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, lessonId])
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  courseId  String
+  quantity  Int      @default(1)
+  addedAt   DateTime @default(now())
+
+  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, courseId])
+}
+
+model Payment {
+  id                 String          @id @default(cuid())
+  userId             String
+  provider           PaymentProvider @default(MERCADOPAGO)
+  providerPaymentId  String?
+  status             PaymentStatus   @default(PENDING)
+  amount             Int
+  currency           String          @default("ARS")
+  metadata           Json?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enrollments Enrollment[]
+
+  @@index([status])
+}
+
+model Coupon {
+  id             String     @id @default(cuid())
+  code           String     @unique
+  type           CouponType @default(PERCENT)
+  amount         Int
+  active         Boolean    @default(true)
+  maxRedemptions Int?
+  redemptions    Int        @default(0)
+  expiresAt      DateTime?
+  createdById    String?
+  createdAt      DateTime   @default(now())
+
+  createdBy User? @relation("CouponCreator", fields: [createdById], references: [id])
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String?
+  content     String
+  published   Boolean  @default(false)
+  publishedAt DateTime?
+  authorId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  author User? @relation(fields: [authorId], references: [id])
+}
+
+model PublicResource {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  url         String
+  createdAt   DateTime @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  courseId  String
+  userId    String
+  isHidden  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ModerationReport {
+  id          String              @id @default(cuid())
+  targetType  ModerationTargetType
+  targetId    String
+  reason      String
+  status      ModerationStatus    @default(OPEN)
+  reporterId  String?
+  createdAt   DateTime            @default(now())
+
+  reporter User? @relation("ReporterReports", fields: [reporterId], references: [id])
+  actions  ModerationAction[]
+}
+
+model ModerationAction {
+  id          String               @id @default(cuid())
+  reportId    String
+  actionType  ModerationActionType
+  note        String?
+  moderatorId String?
+  createdAt   DateTime             @default(now())
+
+  report    ModerationReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  moderator User?            @relation("ModeratorActions", fields: [moderatorId], references: [id])
+}
+
+model SystemLog {
+  id        String   @id @default(cuid())
+  level     LogLevel @default(INFO)
+  action    String
+  message   String
+  meta      Json?
+  userId    String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model IntegrationSetting {
+  id          String   @id @default(cuid())
+  provider    String   @unique
+  isEnabled   Boolean  @default(false)
+  publicKey   String?
+  webhookUrl  String?
+  notes       String?
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+model BrandingSetting {
+  id            String   @id @default(cuid())
+  logoUrl       String?
+  primaryColor  String   @default("#0B0D0E")
+  secondaryColor String  @default("#F5F1E8")
+  accentColor   String   @default("#8C6C3F")
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
+}
+
+model SystemSetting {
+  id                 String   @id @default(cuid())
+  maintenanceMode    Boolean  @default(false)
+  maintenanceMessage String   @default("Estamos realizando mejoras. Volvé en unos minutos.")
+  updatedAt          DateTime @updatedAt
+  createdAt          DateTime @default(now())
+}
+
+model LiveSession {
+  id              String   @id @default(cuid())
+  title           String
+  status          String   @default("scheduled")
+  muxLiveStreamId String?
+  muxStreamKey    String?
+  muxPlaybackId   String?
+  scheduledAt     DateTime?
+  createdById     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  createdBy User? @relation("LiveSessionCreator", fields: [createdById], references: [id])
+}
