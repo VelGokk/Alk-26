@@ -3,12 +3,15 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { submitForReview } from "@/lib/actions/instructor";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function InstructorCoursesPage({
   params,
 }: {
   params: { lang: string };
 }) {
+  await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
   const session = await getServerSession(authOptions);
   const courses = await prisma.course.findMany({
     where: { instructorId: session?.user.id },

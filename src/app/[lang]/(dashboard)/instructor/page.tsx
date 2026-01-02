@@ -1,8 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function InstructorDashboard() {
+  await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
   const session = await getServerSession(authOptions);
   const courses = await prisma.course.count({
     where: { instructorId: session?.user.id },

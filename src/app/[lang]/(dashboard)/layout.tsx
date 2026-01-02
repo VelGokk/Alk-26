@@ -11,7 +11,7 @@ export default async function DashboardLayout({
   params,
 }: {
   children: ReactNode;
-  params: { lang: string };
+  params: any;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user) {

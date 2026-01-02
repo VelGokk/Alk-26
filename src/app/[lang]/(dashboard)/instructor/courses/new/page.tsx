@@ -1,6 +1,9 @@
 import { createCourse } from "@/lib/actions/instructor";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
-export default function NewCoursePage() {
+export default async function NewCoursePage() {
+  await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
   return (
     <div className="space-y-6">
       <div>

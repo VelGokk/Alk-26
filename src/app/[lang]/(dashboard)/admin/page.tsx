@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function AdminDashboard() {
+  await requireRole([Role.ADMIN, Role.SUPERADMIN]);
   const [courses, users, enrollments, payments] = await Promise.all([
     prisma.course.count(),
     prisma.user.count(),

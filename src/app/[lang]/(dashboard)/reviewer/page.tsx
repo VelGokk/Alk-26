@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function ReviewerDashboard() {
+  await requireRole([Role.REVIEWER, Role.SUPERADMIN]);
   const pending = await prisma.courseReview.count({
     where: { status: "PENDING" },
   });

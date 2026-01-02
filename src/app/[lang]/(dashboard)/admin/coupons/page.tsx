@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { createCoupon, deleteCoupon } from "@/lib/actions/admin";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function AdminCouponsPage() {
+  await requireRole([Role.ADMIN, Role.SUPERADMIN]);
   const coupons = await prisma.coupon.findMany({ orderBy: { createdAt: "desc" } });
 
   return (

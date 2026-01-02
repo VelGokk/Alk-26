@@ -1,12 +1,15 @@
 import { prisma } from "@/lib/prisma";
 import { updateCourse } from "@/lib/actions/instructor";
 import UploadField from "@/components/public/UploadField";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function EditCoursePage({
   params,
 }: {
   params: { courseId: string };
 }) {
+  await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
   const course = await prisma.course.findUnique({
     where: { id: params.courseId },
   });

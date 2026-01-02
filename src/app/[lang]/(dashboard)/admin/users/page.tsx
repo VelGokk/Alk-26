@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { ROLE_LABELS } from "@/lib/constants";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function AdminUsersPage() {
+  await requireRole([Role.ADMIN, Role.SUPERADMIN]);
   const users = await prisma.user.findMany({ orderBy: { createdAt: "desc" } });
 
   return (

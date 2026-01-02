@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { updateCourseStatus } from "@/lib/actions/admin";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function AdminCoursesPage() {
+  await requireRole([Role.ADMIN, Role.SUPERADMIN]);
   const courses = await prisma.course.findMany({
     include: { instructor: true },
     orderBy: { createdAt: "desc" },

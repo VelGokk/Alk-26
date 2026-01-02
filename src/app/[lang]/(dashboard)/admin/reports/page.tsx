@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { PaymentStatus } from "@prisma/client";
+import { PaymentStatus, Role } from "@prisma/client";
+import { requireRole } from "@/lib/auth/guards";
 
 export default async function AdminReportsPage() {
+  await requireRole([Role.ADMIN, Role.SUPERADMIN]);
   const [enrollments, payments] = await Promise.all([
     prisma.enrollment.count(),
     prisma.payment.groupBy({
