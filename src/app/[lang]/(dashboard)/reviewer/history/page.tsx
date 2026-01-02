@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function ReviewerHistoryPage() {
+  await requireRole([Role.REVIEWER, Role.SUPERADMIN]);
   const reviews = await prisma.courseReview.findMany({
     where: { status: { in: ["APPROVED", "REJECTED"] } },
     include: { course: true, reviewer: true },

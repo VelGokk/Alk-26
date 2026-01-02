@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
@@ -18,6 +18,15 @@ export default function AuthForm({
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextPath = searchParams.get("next") ?? "/app";
+  const roleHome: Record<string, string> = {
+    SUPERADMIN: "/super-admin",
+    ADMIN: "/admin",
+    INSTRUCTOR: "/instructor",
+    REVIEWER: "/reviewer",
+    MODERATOR: "/moderator",
+    USER: "/app",
+    SUBSCRIBER: "/app",
+  };
   const [mode, setMode] = useState<"login" | "register">("login");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +51,10 @@ export default function AuthForm({
       return;
     }
 
-    router.push(`/${lang}${nextPath}`);
+    const session = await getSession();
+    const rolePath = session?.user?.role ? roleHome[session.user.role] : "/app";
+    const target = nextPath ? nextPath : rolePath;
+    router.push(`/${lang}${target}`);
   }
 
   async function handleRegister(event: React.FormEvent<HTMLFormElement>) {
@@ -71,7 +83,9 @@ export default function AuthForm({
       password,
       redirect: false,
     });
-    router.push(`/${lang}/app`);
+    const session = await getSession();
+    const rolePath = session?.user?.role ? roleHome[session.user.role] : "/app";
+    router.push(`/${lang}${rolePath}`);
   }
 
   return (

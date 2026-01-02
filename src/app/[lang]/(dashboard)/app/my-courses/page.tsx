@@ -2,8 +2,11 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { toggleLessonComplete } from "@/lib/actions/student";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function MyCoursesPage() {
+  await requireRole([Role.USER, Role.SUBSCRIBER, Role.SUPERADMIN]);
   const session = await getServerSession(authOptions);
   const enrollments = await prisma.enrollment.findMany({
     where: { userId: session?.user.id },

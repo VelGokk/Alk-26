@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { resolveReport } from "@/lib/actions/moderator";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function ModeratorReportsPage() {
+  await requireRole([Role.MODERATOR, Role.SUPERADMIN]);
   const reports = await prisma.moderationReport.findMany({
     where: { status: { in: ["OPEN", "IN_REVIEW"] } },
     orderBy: { createdAt: "desc" },

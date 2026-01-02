@@ -1,8 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function StudentDashboard() {
+  await requireRole([Role.USER, Role.SUBSCRIBER, Role.SUPERADMIN]);
   const session = await getServerSession(authOptions);
   const [enrollments, payments] = await Promise.all([
     prisma.enrollment.count({ where: { userId: session?.user.id } }),

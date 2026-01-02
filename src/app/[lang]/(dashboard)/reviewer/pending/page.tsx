@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { approveCourse, rejectCourse } from "@/lib/actions/reviewer";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function ReviewerPendingPage() {
+  await requireRole([Role.REVIEWER, Role.SUPERADMIN]);
   const pending = await prisma.courseReview.findMany({
     where: { status: "PENDING" },
     include: { course: true, reviewer: true },

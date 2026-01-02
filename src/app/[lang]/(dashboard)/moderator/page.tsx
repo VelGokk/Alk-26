@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function ModeratorDashboard() {
+  await requireRole([Role.MODERATOR, Role.SUPERADMIN]);
   const openReports = await prisma.moderationReport.count({
     where: { status: "OPEN" },
   });

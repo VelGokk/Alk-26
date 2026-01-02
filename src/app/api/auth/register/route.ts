@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 import { logEvent } from "@/lib/logger";
+import { sendEmail } from "@/lib/integrations/resend";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -43,6 +44,12 @@ export async function POST(request: Request) {
     action: "auth.register",
     message: `Nuevo registro ${user.email}`,
     userId: user.id,
+  });
+
+  await sendEmail({
+    to: user.email,
+    subject: "Bienvenido a ALKAYA",
+    html: `<p>Hola ${user.name ?? ""}, bienvenido a ALKAYA LMS.</p>`,
   });
 
   return NextResponse.json({ success: true });

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { fetchPayment, isMercadoPagoConfigured } from "@/lib/integrations/mercadopago";
 import { PaymentStatus } from "@prisma/client";
 import { logEvent } from "@/lib/logger";
+import { sendEmail } from "@/lib/integrations/resend";
 
 export const runtime = "nodejs";
 
@@ -86,6 +87,15 @@ export async function POST(request: Request) {
     });
     if (cart) {
       await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: payment.userId } });
+    if (user?.email) {
+      await sendEmail({
+        to: user.email,
+        subject: "Compra confirmada",
+        html: `<p>Tu compra en ALKAYA fue aprobada. Ya podés acceder a tus cursos.</p>`,
+      });
     }
   }
 

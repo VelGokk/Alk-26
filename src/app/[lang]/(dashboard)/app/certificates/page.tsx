@@ -2,12 +2,15 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { requireRole } from "@/lib/auth/guards";
+import { Role } from "@prisma/client";
 
 export default async function CertificatesPage({
   params,
 }: {
   params: { lang: string };
 }) {
+  await requireRole([Role.USER, Role.SUBSCRIBER, Role.SUPERADMIN]);
   const session = await getServerSession(authOptions);
   const completed = await prisma.enrollment.findMany({
     where: { userId: session?.user.id, progressPercent: { gte: 100 } },

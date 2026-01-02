@@ -8,7 +8,7 @@ export default function PublicLayout({
   params,
 }: {
   children: ReactNode;
-  params: { lang: AppLocale };
+  params: any;
 }) {
   return (
     <div className="bg-grid">
