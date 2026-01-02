@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { signOut } from "next-auth/react";
 
 export default function ProfileMenu({
@@ -19,6 +20,18 @@ export default function ProfileMenu({
           {name ?? email ?? "Usuario"}
         </span>
       </div>
+      <Link
+        href={`/${lang}/profile`}
+        className="rounded-full border border-black/10 px-3 py-1 text-[10px]"
+      >
+        Perfil
+      </Link>
+      <Link
+        href={`/${lang}/profile?tab=settings`}
+        className="rounded-full border border-black/10 px-3 py-1 text-[10px]"
+      >
+        Settings
+      </Link>
       <button
         type="button"
         onClick={() => signOut({ callbackUrl: `/${lang}/auth` })}

@@ -17,7 +17,7 @@ export default function AuthForm({
 }: AuthFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const nextPath = searchParams.get("next") ?? "/app";
+  const nextPath = searchParams.get("next");
   const roleHome: Record<string, string> = {
     SUPERADMIN: "/super-admin",
     ADMIN: "/admin",
@@ -53,7 +53,7 @@ export default function AuthForm({
 
     const session = await getSession();
     const rolePath = session?.user?.role ? roleHome[session.user.role] : "/app";
-    const target = nextPath ? nextPath : rolePath;
+    const target = nextPath ?? rolePath;
     router.push(`/${lang}${target}`);
   }
 

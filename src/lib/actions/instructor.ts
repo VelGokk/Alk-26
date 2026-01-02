@@ -13,7 +13,13 @@ export async function createCourse(formData: FormData) {
   const price = Number(formData.get("price") ?? 0);
   if (!title || !description) return;
 
-  const slug = slugify(title);
+  const baseSlug = slugify(title);
+  let slug = baseSlug;
+  let suffix = 1;
+  while (await prisma.course.findUnique({ where: { slug } })) {
+    slug = `${baseSlug}-${suffix}`;
+    suffix += 1;
+  }
   await prisma.course.create({
     data: {
       title,

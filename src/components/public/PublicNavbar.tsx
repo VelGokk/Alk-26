@@ -19,6 +19,8 @@ export default async function PublicNavbar({ lang }: { lang: AppLocale }) {
           <Link href={`/${lang}/courses`}>{dictionary.nav.courses}</Link>
           <Link href={`/${lang}/resources`}>{dictionary.nav.resources}</Link>
           <Link href={`/${lang}/pricing`}>{dictionary.nav.pricing}</Link>
+          <Link href={`/${lang}/checkout`}>{dictionary.nav.checkout}</Link>
+          <Link href={`/${lang}/profile`}>{dictionary.nav.profile}</Link>
         </nav>
         <div className="flex items-center gap-3">
           <LocaleSwitcher current={lang} />

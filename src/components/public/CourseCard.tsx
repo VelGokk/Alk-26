@@ -30,9 +30,7 @@ export default function CourseCard({ course, lang }: CourseCardProps) {
           {course.status}
         </p>
         <h3 className="font-heading text-xl">{course.title}</h3>
-        <p className="text-sm text-zinc-600 line-clamp-2">
-          {course.description}
-        </p>
+        <p className="text-sm text-zinc-600">{course.description}</p>
         <div className="flex items-center justify-between pt-2">
           <span className="text-sm font-semibold text-ink">
             {formatCurrency(course.price, course.currency)}

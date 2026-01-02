@@ -64,7 +64,7 @@ export async function POST() {
 
   await prisma.payment.update({
     where: { id: payment.id },
-    data: { metadata: { ...payment.metadata, preferenceId: preference.id } },
+    data: { metadata: { ...(payment.metadata as any), preferenceId: preference.id } },
   });
 
   await logEvent({
