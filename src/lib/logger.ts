@@ -17,7 +17,7 @@ export async function logEvent(input: LogInput) {
         action: input.action,
         message: input.message,
         userId: input.userId,
-        meta: input.meta,
+        meta: input.meta as any,
       },
     });
   } catch (error) {
