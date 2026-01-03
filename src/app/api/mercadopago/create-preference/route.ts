@@ -52,6 +52,7 @@ export async function POST() {
 
   const preference = await createPreference({
     items: cart.items.map((item) => ({
+      id: item.courseId,
       title: item.course.title,
       quantity: item.quantity,
       unit_price: item.course.price,

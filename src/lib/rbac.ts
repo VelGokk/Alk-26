@@ -7,7 +7,7 @@ export function isRoleAllowed(pathname: string, role?: Role | null) {
     pathname.startsWith(route.prefix)
   );
   if (!match) return true;
-  return (match.roles as any).includes(role);
+  return match.roles.includes(role);
 }
 
 export function requiredRolesForPath(pathname: string) {

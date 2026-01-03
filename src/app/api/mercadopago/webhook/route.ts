@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { fetchPayment, isMercadoPagoConfigured } from "@/lib/integrations/mercadopago";
 import { PaymentStatus } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { logEvent } from "@/lib/logger";
 import { sendEmail } from "@/lib/integrations/resend";
 
@@ -69,7 +70,7 @@ export async function POST(request: Request) {
     data: {
       status,
       providerPaymentId: String(paymentId),
-      metadata: mergedMetadata as any,
+      metadata: mergedMetadata as Prisma.InputJsonValue,
     },
   });
 

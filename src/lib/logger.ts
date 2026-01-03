@@ -1,4 +1,5 @@
 import { LogLevel } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 
 type LogInput = {
@@ -17,7 +18,7 @@ export async function logEvent(input: LogInput) {
         action: input.action,
         message: input.message,
         userId: input.userId,
-        meta: input.meta as any,
+        meta: input.meta as Prisma.InputJsonValue | undefined,
       },
     });
   } catch (error) {

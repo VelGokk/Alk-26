@@ -16,11 +16,13 @@ export async function createLiveStream(title: string) {
     throw new Error("Mux not configured");
   }
 
-  const liveStream = await muxClient.video.liveStreams.create({
+  const payload = {
     playback_policy: ["public"],
     new_asset_settings: { playback_policy: ["public"] },
     name: title,
-  } as any);
+  } as Record<string, unknown>;
+
+  const liveStream = await muxClient.video.liveStreams.create(payload);
 
   return {
     muxLiveStreamId: liveStream.id,

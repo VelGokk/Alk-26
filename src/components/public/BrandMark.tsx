@@ -16,14 +16,14 @@ export default async function BrandMark({ href }: { href: string }) {
           className="rounded-lg border border-black/10 object-cover"
         />
       ) : (
-        <div className="h-10 w-10 rounded-lg bg-ink text-white text-xs flex items-center justify-center font-heading">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-ink text-xs font-heading text-white">
           A
         </div>
       )}
       <div>
-        <p className="font-heading text-lg tracking-wide">ALKAYA</p>
-        <p className="text-xs uppercase tracking-[0.28em] text-zinc-500">
-          Learning Suite
+        <p className="font-heading text-lg tracking-wide text-deep">ALKAYA</p>
+        <p className="font-sans text-xs uppercase tracking-[0.32em] text-slate-500">
+          Consultoria Ontologica
         </p>
       </div>
     </Link>

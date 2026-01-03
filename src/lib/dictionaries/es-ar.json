@@ -2,21 +2,20 @@
   "brand": "ALKAYA",
   "nav": {
     "home": "Inicio",
-    "blog": "Blog",
-    "courses": "Cursos",
-    "resources": "Recursos",
-    "pricing": "Planes",
-    "checkout": "Checkout",
-    "profile": "Perfil"
+    "consultoria": "Consultoria",
+    "formacion": "Formacion",
+    "recursos": "Recursos",
+    "nosotros": "Nosotros",
+    "contacto": "Contacto"
   },
   "cta": {
     "login": "Ingresar",
-    "signup": "Crear cuenta",
-    "dashboard": "Ir al panel"
+    "dashboard": "Ir al panel",
+    "contact": "Hablar con un consultor"
   },
   "hero": {
-    "title": "Formacion premium para equipos que exigen excelencia",
-    "subtitle": "ALKAYA combina contenido curado, seguimiento y analitica para acelerar resultados reales."
+    "title": "Disenamos el sistema que hace que el cambio si se sostenga.",
+    "subtitle": "Para lideres y organizaciones cansados de entender mucho... y cambiar poco."
   },
   "labels": {
     "language": "Idioma",

@@ -20,7 +20,7 @@ export default function LocaleSwitcher({ current }: { current: string }) {
 
   return (
     <select
-      className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs uppercase tracking-[0.2em]"
+      className="rounded-full border border-line bg-white/80 px-3 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600 font-sans"
       value={current}
       onChange={(event) => handleChange(event.target.value)}
     >

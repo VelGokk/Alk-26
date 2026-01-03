@@ -1,22 +1,21 @@
 {
   "brand": "ALKAYA",
   "nav": {
-    "home": "Home",
-    "blog": "Blog",
-    "courses": "Courses",
-    "resources": "Resources",
-    "pricing": "Pricing",
-    "checkout": "Checkout",
-    "profile": "Profile"
+    "home": "Inicio",
+    "consultoria": "Consultoria",
+    "formacion": "Formacion",
+    "recursos": "Recursos",
+    "nosotros": "Nosotros",
+    "contacto": "Contacto"
   },
   "cta": {
-    "login": "Sign in",
-    "signup": "Create account",
-    "dashboard": "Go to dashboard"
+    "login": "Ingresar",
+    "dashboard": "Ir al panel",
+    "contact": "Hablar con un consultor"
   },
   "hero": {
-    "title": "Premium training for teams that demand excellence",
-    "subtitle": "ALKAYA blends curated content, tracking, and analytics to accelerate real outcomes."
+    "title": "Disenamos el sistema que hace que el cambio si se sostenga.",
+    "subtitle": "Para lideres y organizaciones cansados de entender mucho... y cambiar poco."
   },
   "labels": {
     "language": "Language",

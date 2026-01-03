@@ -12,7 +12,7 @@ function getClient() {
   });
 }
 
-type PreferenceItem = { title: string; quantity: number; unit_price: number };
+type PreferenceItem = { id: string; title: string; quantity: number; unit_price: number };
 
 export type MercadoPagoPayment = {
   external_reference?: string;
@@ -32,7 +32,7 @@ export async function createPreference(payload: {
   const preference = new Preference(getClient());
   return preference.create({
     body: {
-      items: payload.items as Record<string, unknown>[],
+      items: payload.items,
       external_reference: payload.externalReference,
       notification_url: payload.notificationUrl,
       back_urls: payload.backUrls,
@@ -42,5 +42,5 @@ export async function createPreference(payload: {
 
 export async function fetchPayment(id: string): Promise<MercadoPagoPayment> {
   const payment = new Payment(getClient());
-  return payment.get({ id }) as Promise<MercadoPagoPayment>;
+  return payment.get({ id }) as unknown as Promise<MercadoPagoPayment>;
 }

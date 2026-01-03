@@ -2,9 +2,9 @@ import { prisma } from "./prisma";
 
 export const DEFAULT_BRANDING = {
   logoUrl: "",
-  primaryColor: "#0B0D0E",
-  secondaryColor: "#F5F1E8",
-  accentColor: "#8C6C3F",
+  primaryColor: "#0A2A43",
+  secondaryColor: "#F5F7FA",
+  accentColor: "#0D6EFD",
 };
 
 export const DEFAULT_SETTINGS = {

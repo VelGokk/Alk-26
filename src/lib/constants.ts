@@ -20,7 +20,12 @@ export const ROLE_HOME: Record<Role, string> = {
   SUBSCRIBER: "/app",
 };
 
-export const DASHBOARD_ROUTES = [
+export type DashboardRoute = {
+  prefix: string;
+  roles: Role[];
+};
+
+export const DASHBOARD_ROUTES: DashboardRoute[] = [
   { prefix: "/super-admin", roles: [Role.SUPERADMIN] },
   { prefix: "/admin", roles: [Role.ADMIN, Role.SUPERADMIN] },
   { prefix: "/instructor", roles: [Role.INSTRUCTOR, Role.SUPERADMIN] },

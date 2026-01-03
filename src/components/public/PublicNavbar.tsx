@@ -8,38 +8,74 @@ import BrandMark from "./BrandMark";
 export default async function PublicNavbar({ lang }: { lang: AppLocale }) {
   const dictionary = await getDictionary(lang);
   const session = await getServerSession(authOptions);
+  const navItems = [
+    { href: `/${lang}`, label: dictionary.nav.home },
+    { href: `/${lang}/consultoria`, label: dictionary.nav.consultoria },
+    { href: `/${lang}/formacion`, label: dictionary.nav.formacion },
+    { href: `/${lang}/recursos`, label: dictionary.nav.recursos },
+    { href: `/${lang}/nosotros`, label: dictionary.nav.nosotros },
+    { href: `/${lang}/contacto`, label: dictionary.nav.contacto },
+  ];
 
   return (
-    <header className="w-full border-b border-black/10 bg-white/70 backdrop-blur">
+    <header className="sticky top-0 z-40 w-full border-b border-line bg-surface/80 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
         <BrandMark href={`/${lang}`} />
-        <nav className="hidden items-center gap-6 text-sm uppercase tracking-[0.2em] text-zinc-600 md:flex">
-          <Link href={`/${lang}`}>{dictionary.nav.home}</Link>
-          <Link href={`/${lang}/blog`}>{dictionary.nav.blog}</Link>
-          <Link href={`/${lang}/courses`}>{dictionary.nav.courses}</Link>
-          <Link href={`/${lang}/resources`}>{dictionary.nav.resources}</Link>
-          <Link href={`/${lang}/pricing`}>{dictionary.nav.pricing}</Link>
-          <Link href={`/${lang}/checkout`}>{dictionary.nav.checkout}</Link>
-          <Link href={`/${lang}/profile`}>{dictionary.nav.profile}</Link>
-        </nav>
-        <div className="flex items-center gap-3">
-          <LocaleSwitcher current={lang} />
-          {session?.user ? (
+        <nav className="hidden items-center gap-6 font-sans text-xs uppercase tracking-[0.24em] text-slate-600 lg:flex">
+          {navItems.map((item) => (
             <Link
-              href={`/${lang}/app`}
-              className="rounded-full bg-ink px-4 py-2 text-xs uppercase tracking-[0.2em] text-white"
+              key={item.href}
+              href={item.href}
+              className="transition duration-200 hover:text-alkaya"
             >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="hidden items-center gap-3 md:flex">
+          <LocaleSwitcher current={lang} />
+          <Link href={`/${lang}/contacto`} className="btn-primary">
+            {dictionary.cta.contact}
+          </Link>
+          {session?.user ? (
+            <Link href={`/${lang}/app`} className="btn-secondary">
               {dictionary.cta.dashboard}
             </Link>
           ) : (
-            <Link
-              href={`/${lang}/auth`}
-              className="rounded-full bg-ink px-4 py-2 text-xs uppercase tracking-[0.2em] text-white"
-            >
+            <Link href={`/${lang}/auth`} className="btn-secondary">
               {dictionary.cta.login}
             </Link>
           )}
         </div>
+        <details className="relative md:hidden">
+          <summary className="list-none cursor-pointer rounded-full border border-line bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-deep font-sans">
+            Menu
+          </summary>
+          <div className="absolute right-0 mt-3 w-56 rounded-2xl border border-line bg-white/95 p-4 shadow-soft">
+            <div className="flex flex-col gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-600 font-sans">
+              {navItems.map((item) => (
+                <Link key={item.href} href={item.href}>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+            <div className="mt-4 flex flex-col gap-3">
+              <Link href={`/${lang}/contacto`} className="btn-primary">
+                {dictionary.cta.contact}
+              </Link>
+              {session?.user ? (
+                <Link href={`/${lang}/app`} className="btn-secondary">
+                  {dictionary.cta.dashboard}
+                </Link>
+              ) : (
+                <Link href={`/${lang}/auth`} className="btn-secondary">
+                  {dictionary.cta.login}
+                </Link>
+              )}
+              <LocaleSwitcher current={lang} />
+            </div>
+          </div>
+        </details>
       </div>
     </header>
   );

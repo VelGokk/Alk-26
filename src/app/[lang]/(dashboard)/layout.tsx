@@ -11,18 +11,19 @@ export default async function DashboardLayout({
   params,
 }: {
   children: ReactNode;
-  params: any;
+  params: Promise<{ lang: string }>;
 }) {
   const session = await getServerSession(authOptions);
+  const resolvedParams = await params;
   if (!session?.user) {
-    redirect(`/${params.lang}/auth`);
+    redirect(`/${resolvedParams.lang}/auth`);
   }
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar lang={params.lang} role={session.user.role as Role} />
+      <Sidebar lang={resolvedParams.lang} role={session.user.role as Role} />
       <div className="flex flex-1 flex-col">
-        <Topbar lang={params.lang} />
+        <Topbar lang={resolvedParams.lang} />
         <main className="flex-1 bg-grid px-6 py-8">{children}</main>
       </div>
     </div>

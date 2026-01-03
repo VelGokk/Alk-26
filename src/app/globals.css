@@ -26,6 +26,10 @@
   --color-foreground: var(--color-text);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: radial-gradient(
       circle at 15% 20%,
@@ -112,14 +116,18 @@ main {
     @apply font-sans text-xs uppercase tracking-[0.32em] text-slate-500;
   }
 
+  .subtitle {
+    @apply font-sans text-lg text-slate-600;
+  }
+
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-[0.24em] transition duration-200 ease-out hover:-translate-y-0.5 hover:bg-emerald-500;
+    @apply font-sans inline-flex items-center justify-center rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-[0.24em] transition duration-200 ease-out hover:-translate-y-0.5 hover:bg-emerald-500;
     background-color: var(--color-cta);
     color: white;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-[0.24em] transition duration-200 ease-out hover:-translate-y-0.5;
+    @apply font-sans inline-flex items-center justify-center rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-[0.24em] transition duration-200 ease-out hover:-translate-y-0.5;
     border: 1px solid var(--border);
     background: rgba(255,255,255,0.7);
     color: var(--color-text);
@@ -131,7 +139,7 @@ main {
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center text-xs font-semibold uppercase tracking-[0.24em] transition duration-200 ease-out;
+    @apply font-sans inline-flex items-center justify-center text-xs font-semibold uppercase tracking-[0.24em] transition duration-200 ease-out;
     color: var(--color-alkaya);
   }
 
@@ -155,7 +163,7 @@ main {
   }
 
   .pill {
-    @apply inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em];
+    @apply font-sans inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em];
     border: 1px solid var(--border);
     background: rgba(255,255,255,0.7);
     color: #475569;

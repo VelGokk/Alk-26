@@ -1,21 +1,20 @@
 import { ReactNode } from "react";
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@/lib/i18n";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
 import { getSystemSettings } from "@/lib/settings";
 import MaintenanceBanner from "@/components/public/MaintenanceBanner";
 
-export async function generateStaticParams() {
-  return SUPPORTED_LOCALES.map((lang) => ({ lang }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function LocaleLayout({
   children,
   params,
 }: {
   children: ReactNode;
-  params: any;
+  params: Promise<{ lang?: string }>;
 }) {
   const settings = await getSystemSettings();
-  const lang = params.lang ?? DEFAULT_LOCALE;
+  const resolvedParams = await params;
+  const lang = resolvedParams.lang ?? DEFAULT_LOCALE;
 
   return (
     <div lang={lang} className="min-h-screen">
