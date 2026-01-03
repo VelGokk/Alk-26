@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     data: {
       status,
       providerPaymentId: String(paymentId),
-      metadata: paymentInfo,
+      metadata: paymentInfo as any,
     },
   });
 

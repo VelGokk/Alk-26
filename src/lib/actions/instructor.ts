@@ -34,13 +34,21 @@ export async function createCourse(formData: FormData) {
 }
 
 export async function updateCourse(formData: FormData) {
-  await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
+  const session = await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
   const courseId = String(formData.get("courseId") ?? "");
   const title = String(formData.get("title") ?? "");
   const description = String(formData.get("description") ?? "");
   const price = Number(formData.get("price") ?? 0);
   const thumbnailUrl = String(formData.get("thumbnailUrl") ?? "");
   if (!courseId || !title) return;
+
+  const course = await prisma.course.findUnique({ where: { id: courseId } });
+  if (
+    !course ||
+    (session.user.role !== Role.SUPERADMIN && course.instructorId !== session.user.id)
+  ) {
+    return;
+  }
 
   await prisma.course.update({
     where: { id: courseId },
@@ -54,6 +62,14 @@ export async function submitForReview(formData: FormData) {
   const session = await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
   const courseId = String(formData.get("courseId") ?? "");
   if (!courseId) return;
+
+  const course = await prisma.course.findUnique({ where: { id: courseId } });
+  if (
+    !course ||
+    (session.user.role !== Role.SUPERADMIN && course.instructorId !== session.user.id)
+  ) {
+    return;
+  }
 
   const reviewer = await prisma.user.findFirst({
     where: { role: Role.REVIEWER, isActive: true },
@@ -77,10 +93,18 @@ export async function submitForReview(formData: FormData) {
 }
 
 export async function createModule(formData: FormData) {
-  await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
+  const session = await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
   const courseId = String(formData.get("courseId") ?? "");
   const title = String(formData.get("title") ?? "");
   if (!courseId || !title) return;
+
+  const course = await prisma.course.findUnique({ where: { id: courseId } });
+  if (
+    !course ||
+    (session.user.role !== Role.SUPERADMIN && course.instructorId !== session.user.id)
+  ) {
+    return;
+  }
 
   await prisma.courseModule.create({
     data: { courseId, title },
@@ -90,12 +114,23 @@ export async function createModule(formData: FormData) {
 }
 
 export async function createLesson(formData: FormData) {
-  await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
+  const session = await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
   const moduleId = String(formData.get("moduleId") ?? "");
   const title = String(formData.get("title") ?? "");
   const content = String(formData.get("content") ?? "");
   const contentType = String(formData.get("contentType") ?? "TEXT");
   if (!moduleId || !title) return;
+
+  const module = await prisma.courseModule.findUnique({
+    where: { id: moduleId },
+    include: { course: true },
+  });
+  if (
+    !module ||
+    (session.user.role !== Role.SUPERADMIN && module.course.instructorId !== session.user.id)
+  ) {
+    return;
+  }
 
   await prisma.lesson.create({
     data: {
@@ -106,10 +141,7 @@ export async function createLesson(formData: FormData) {
     },
   });
 
-  const module = await prisma.courseModule.findUnique({ where: { id: moduleId } });
-  if (module) {
-    revalidatePath(`/instructor/courses/${module.courseId}/modules`);
-  }
+  revalidatePath(`/instructor/courses/${module.courseId}/modules`);
 }
 
 export async function addResource(formData: FormData) {
@@ -119,6 +151,14 @@ export async function addResource(formData: FormData) {
   const url = String(formData.get("url") ?? "");
   const type = String(formData.get("type") ?? "OTHER");
   if (!courseId || !title || !url) return;
+
+  const course = await prisma.course.findUnique({ where: { id: courseId } });
+  if (
+    !course ||
+    (session.user.role !== Role.SUPERADMIN && course.instructorId !== session.user.id)
+  ) {
+    return;
+  }
 
   await prisma.courseResource.create({
     data: {
