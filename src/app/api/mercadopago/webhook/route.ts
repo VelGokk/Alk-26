@@ -59,7 +59,7 @@ export async function POST(request: Request) {
   }
 
   const mergedMetadata = {
-    ...(payment.metadata ?? {}),
+    ...(payment.metadata as any || {}),
     provider: paymentInfo,
   };
 
