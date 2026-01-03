@@ -20,7 +20,7 @@ export async function createLiveStream(title: string) {
     playback_policy: ["public"],
     new_asset_settings: { playback_policy: ["public"] },
     name: title,
-  });
+  } as any);
 
   return {
     muxLiveStreamId: liveStream.id,
