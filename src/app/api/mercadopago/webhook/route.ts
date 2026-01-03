@@ -58,8 +58,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ status: "unknown_payment" });
   }
 
+  const currentMetadata = (payment.metadata ?? {}) as Record<string, unknown>;
   const mergedMetadata = {
-    ...(payment.metadata as any || {}),
+    ...currentMetadata,
     provider: paymentInfo,
   };
 
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
     data: {
       status,
       providerPaymentId: String(paymentId),
-      metadata: mergedMetadata,
+      metadata: mergedMetadata as any,
     },
   });
 
