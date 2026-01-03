@@ -75,9 +75,10 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role ?? "USER";
-        token.userId = (user as any).id;
-        token.isActive = (user as any).isActive ?? true;
+        const typedUser = user as { id: string; role?: string; isActive?: boolean };
+        token.role = typedUser.role ?? "USER";
+        token.userId = typedUser.id;
+        token.isActive = typedUser.isActive ?? true;
       }
       return token;
     },
