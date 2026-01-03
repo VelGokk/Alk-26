@@ -29,13 +29,15 @@ export default function PublicFooter({ lang }: { lang: string }) {
           <ul className="mt-3 space-y-2">
             <li>soporte@alkaya.ai</li>
             <li>+54 11 5555-5555</li>
-            <li>Buenos Aires · CDMX · Remote</li>
+            <li>Buenos Aires - CDMX - Remote</li>
           </ul>
         </div>
       </div>
       <div className="border-t border-black/10 px-4 py-4 text-center text-xs uppercase tracking-[0.2em] text-zinc-500">
-        © 2026 ALKAYA LMS
+        �(c) 2026 ALKAYA LMS
       </div>
     </footer>
   );
 }
+
+

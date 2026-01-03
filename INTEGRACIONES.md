@@ -36,7 +36,7 @@ Variables:
 - `OPENAI_API_KEY`
 
 Endpoint:
-- `POST /api/ai/quiz` (genera quiz si est√° configurado)
+- `POST /api/ai/quiz` (genera quiz si est√ configurado)
 
 ## OAuth (opcional)
 Google:
@@ -46,3 +46,4 @@ Google:
 GitHub:
 - `GITHUB_CLIENT_ID`
 - `GITHUB_CLIENT_SECRET`
+

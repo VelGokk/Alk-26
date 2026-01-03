@@ -2,7 +2,7 @@
 
 1) Crear proyecto en Vercel
    - Importar este repositorio.
-   - Framework: Next.js (detectar autom√°tico).
+   - Framework: Next.js (detectar autom√tico).
 
 2) Configurar base de datos (Neon)
    - Crear un proyecto en Neon.
@@ -14,7 +14,7 @@
    - `NEXTAUTH_URL` (URL de producci√≥n, ej: https://alkaya.vercel.app)
    - `NEXT_PUBLIC_APP_URL` (igual a `NEXTAUTH_URL`)
 
-4) Variables opcionales (si quer√©s activar integraciones)
+4) Variables opcionales (si quer√(c)s activar integraciones)
    - Mercado Pago: `MERCADOPAGO_ACCESS_TOKEN`, `MERCADOPAGO_WEBHOOK_SECRET`
    - Resend: `RESEND_API_KEY`, `RESEND_FROM`
    - Cloudinary: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
@@ -32,3 +32,4 @@
 
 Seguridad:
 - No subir tokens al repositorio. Siempre usar variables en Vercel.
+

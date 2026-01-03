@@ -16,7 +16,7 @@ export default async function LiveSessionsPanel() {
         </p>
         {!isMuxConfigured ? (
           <p className="mt-2 text-xs text-zinc-500">
-            Configur√° MUX_TOKEN_ID y MUX_TOKEN_SECRET para habilitar streaming.
+            Configur√ MUX_TOKEN_ID y MUX_TOKEN_SECRET para habilitar streaming.
           </p>
         ) : null}
       </div>
@@ -66,3 +66,4 @@ export default async function LiveSessionsPanel() {
     </div>
   );
 }
+

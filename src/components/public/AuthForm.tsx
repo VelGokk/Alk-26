@@ -46,7 +46,7 @@ export default function AuthForm({
     });
 
     if (result?.error) {
-      setError("Credenciales inv√°lidas.");
+      setError("Credenciales inv√lidas.");
       setLoading(false);
       return;
     }
@@ -225,3 +225,4 @@ export default function AuthForm({
     </div>
   );
 }
+

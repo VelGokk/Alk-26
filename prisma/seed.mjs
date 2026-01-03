@@ -65,7 +65,7 @@ async function main() {
       where: { slug: "liderazgo-estrategico" },
       update: {},
       create: {
-        title: "Liderazgo EstratÃ©gico",
+        title: "Liderazgo EstratÃ(c)gico",
         slug: "liderazgo-estrategico",
         description:
           "Programa intensivo para lÃ­deres que necesitan alinear visiÃ³n, equipo y resultados.",
@@ -82,7 +82,7 @@ async function main() {
         title: "Productividad Ejecutiva",
         slug: "productividad-ejecutiva",
         description:
-          "Sistema de hÃ¡bitos y frameworks para equipos que necesitan foco.",
+          "Sistema de hÃbitos y frameworks para equipos que necesitan foco.",
         price: 32000,
         status: CourseStatus.DRAFT,
         instructorId: instructor.id,
@@ -108,7 +108,7 @@ async function main() {
           {
             moduleId: module.id,
             title: "Rituales de gestiÃ³n",
-            content: "Cadencias y hÃ¡bitos para mejorar performance.",
+            content: "Cadencias y hÃbitos para mejorar performance.",
           },
         ],
       });
@@ -133,7 +133,7 @@ async function main() {
     create: {
       title: "Bienvenida a ALKAYA",
       slug: "bienvenida-alkaya",
-      excerpt: "Por quÃ© creamos una suite LMS premium.",
+      excerpt: "Por quÃ(c) creamos una suite LMS premium.",
       content: "ALKAYA nace para liderar experiencias de aprendizaje premium.",
       published: true,
       publishedAt: new Date(),
@@ -168,7 +168,7 @@ async function main() {
     create: {
       id: "system-default",
       maintenanceMode: false,
-      maintenanceMessage: "Estamos realizando mejoras. VolvÃ© en unos minutos.",
+      maintenanceMessage: "Estamos realizando mejoras. VolvÃ(c) en unos minutos.",
     },
   });
 
@@ -220,3 +220,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+

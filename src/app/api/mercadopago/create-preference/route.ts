@@ -28,7 +28,7 @@ export async function POST() {
 
   if (!cart || cart.items.length === 0) {
     return NextResponse.json(
-      { error: "El carrito está vacío." },
+      { error: "El carrito est� vacío." },
       { status: 400 }
     );
   }
@@ -78,3 +78,4 @@ export async function POST() {
 
   return NextResponse.json({ initPoint: preference.init_point });
 }
+

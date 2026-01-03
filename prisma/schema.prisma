@@ -431,7 +431,7 @@ model BrandingSetting {
 model SystemSetting {
   id                 String   @id @default(cuid())
   maintenanceMode    Boolean  @default(false)
-  maintenanceMessage String   @default("Estamos realizando mejoras. Volv√© en unos minutos.")
+  maintenanceMessage String   @default("Estamos realizando mejoras. Volv√(c) en unos minutos.")
   updatedAt          DateTime @updatedAt
   createdAt          DateTime @default(now())
 }
@@ -450,3 +450,4 @@ model LiveSession {
 
   createdBy User? @relation("LiveSessionCreator", fields: [createdById], references: [id])
 }
+

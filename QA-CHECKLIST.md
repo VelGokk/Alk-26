@@ -16,7 +16,7 @@
 - [ ] Acceso denegado a rutas no permitidas.
 
 ## Superadmin
-- [ ] Dashboard muestra m√©tricas y logs.
+- [ ] Dashboard muestra m√(c)tricas y logs.
 - [ ] Cambiar rol y activar/desactivar usuarios.
 - [ ] Branding guarda cambios.
 - [ ] Mantenimiento togglea y muestra banner.
@@ -26,7 +26,7 @@
 - [ ] Listado de cursos y cambio de estado.
 - [ ] Listado de usuarios.
 - [ ] Reportes de pagos y enrollments.
-- [ ] CRUD b√°sico de cupones.
+- [ ] CRUD b√sico de cupones.
 
 ## Instructor
 - [ ] Crear curso, editar, subir thumbnail.
@@ -44,7 +44,7 @@
 - [ ] Resolver con acciones.
 
 ## Alumno
-- [ ] Cat√°logo visible.
+- [ ] Cat√logo visible.
 - [ ] Agregar a carrito y checkout.
 - [ ] Pago aprobado genera enrollment.
 - [ ] Ver ‚ÄúMis cursos‚Äù.
@@ -57,3 +57,4 @@
 - [ ] Cloudinary sube archivos.
 - [ ] Mux crea live sessions.
 - [ ] AI responde en `/api/ai/quiz`.
+
