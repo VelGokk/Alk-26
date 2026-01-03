@@ -1,32 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --color-ink: #11100f;
-  --color-sand: #f7f2ea;
-  --color-brass: #8c6c3f;
-  --color-tide: #d7e3e5;
-  --color-ember: #c04a2c;
+  --color-deep: #0a2a43;
+  --color-alkaya: #0d6efd;
+  --color-surface: #f5f7fa;
+  --color-surface-muted: #e7eef6;
+  --color-text: #1e293b;
+  --color-cta: #2fbf71;
+  --color-line: rgba(10, 42, 67, 0.12);
+  --color-haze: rgba(13, 110, 253, 0.08);
+  --color-ink: var(--color-deep);
+  --color-sand: var(--color-surface);
+  --color-brass: var(--color-alkaya);
+  --color-tide: #d6e3f0;
+  --color-ember: var(--color-cta);
   --surface: #ffffff;
-  --surface-muted: #f0ebe1;
-  --border: rgba(17, 16, 15, 0.12);
+  --surface-muted: #edf2f7;
+  --border: var(--color-line);
 }
 
 @theme inline {
   --font-sans: var(--font-body);
   --font-mono: var(--font-body);
-  --color-background: var(--color-sand);
-  --color-foreground: var(--color-ink);
+  --color-background: var(--color-surface);
+  --color-foreground: var(--color-text);
 }
 
 body {
   background: radial-gradient(
-      circle at 20% 20%,
-      rgba(215, 227, 229, 0.7),
+      circle at 15% 20%,
+      rgba(13, 110, 253, 0.12),
       transparent 55%
     ),
-    radial-gradient(circle at 80% 0%, rgba(192, 74, 44, 0.12), transparent 45%),
-    var(--color-sand);
-  color: var(--color-ink);
+    radial-gradient(circle at 85% 10%, rgba(47, 191, 113, 0.12), transparent 50%),
+    linear-gradient(180deg, #f9fbfe 0%, #f2f6fb 100%);
+  color: var(--color-text);
   font-family: var(--font-body), "Segoe UI", sans-serif;
   min-height: 100vh;
 }
@@ -37,15 +45,94 @@ main {
 
 .bg-grid {
   background-image: linear-gradient(
-      rgba(17, 16, 15, 0.04) 1px,
+      rgba(10, 42, 67, 0.04) 1px,
       transparent 1px
     ),
-    linear-gradient(90deg, rgba(17, 16, 15, 0.04) 1px, transparent 1px);
-  background-size: 24px 24px;
+    linear-gradient(90deg, rgba(10, 42, 67, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(16px);
   border: 1px solid var(--border);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-up {
+    animation: fade-up 0.75s ease-out both;
+  }
+
+  .animate-fade-up-delay {
+    animation: fade-up 0.75s ease-out 0.15s both;
+  }
+
+  .animate-float {
+    animation: float 7s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow-pulse 5s ease-in-out infinite;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-sans text-xs uppercase tracking-[0.32em] text-slate-500;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-cta px-6 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-white transition duration-200 ease-out hover:-translate-y-0.5 hover:bg-emerald-500;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-line bg-white/70 px-6 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-deep transition duration-200 ease-out hover:-translate-y-0.5 hover:border-alkaya hover:text-alkaya;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center text-xs font-semibold uppercase tracking-[0.24em] text-alkaya transition duration-200 ease-out hover:text-deep;
+  }
+
+  .card {
+    @apply rounded-3xl border border-line bg-white/80 p-6 shadow-soft backdrop-blur;
+  }
+
+  .card-hover {
+    @apply transition duration-200 ease-out hover:-translate-y-1 hover:shadow-glow;
+  }
+
+  .pill {
+    @apply inline-flex items-center rounded-full border border-line bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600;
+  }
 }
