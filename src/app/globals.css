@@ -113,19 +113,38 @@ main {
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-cta px-6 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-white transition duration-200 ease-out hover:-translate-y-0.5 hover:bg-emerald-500;
+    @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-[0.24em] transition duration-200 ease-out hover:-translate-y-0.5 hover:bg-emerald-500;
+    background-color: var(--color-cta);
+    color: white;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-full border border-line bg-white/70 px-6 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-deep transition duration-200 ease-out hover:-translate-y-0.5 hover:border-alkaya hover:text-alkaya;
+    @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-xs font-semibold uppercase tracking-[0.24em] transition duration-200 ease-out hover:-translate-y-0.5;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.7);
+    color: var(--color-text);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--color-alkaya);
+    color: var(--color-alkaya);
+  }
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center text-xs font-semibold uppercase tracking-[0.24em] text-alkaya transition duration-200 ease-out hover:text-deep;
+    @apply inline-flex items-center justify-center text-xs font-semibold uppercase tracking-[0.24em] transition duration-200 ease-out;
+    color: var(--color-alkaya);
+  }
+
+  .btn-ghost:hover {
+    color: var(--color-deep);
+  }
   }
 
   .card {
-    @apply rounded-3xl border border-line bg-white/80 p-6 shadow-soft backdrop-blur;
+    @apply rounded-3xl p-6 shadow-soft backdrop-blur;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.8);
   }
 
   .card-hover {
@@ -133,6 +152,9 @@ main {
   }
 
   .pill {
-    @apply inline-flex items-center rounded-full border border-line bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-slate-600;
+    @apply inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em];
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.7);
+    color: #475569;
   }
 }
