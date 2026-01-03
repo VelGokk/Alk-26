@@ -29,6 +29,12 @@ export const NAV_ITEMS: NavItem[] = [
     roles: ["SUPERADMIN"],
   },
   {
+    label: "Paginas",
+    href: "/super-admin/pages",
+    icon: <FileText className="h-4 w-4" />,
+    roles: ["SUPERADMIN"],
+  },
+  {
     label: "Usuarios & roles",
     href: "/super-admin/users",
     icon: <Users className="h-4 w-4" />,

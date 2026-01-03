@@ -436,6 +436,37 @@ model SystemSetting {
   createdAt          DateTime @default(now())
 }
 
+model Page {
+  id        String   @id @default(cuid())
+  slug      String
+  lang      String
+  seoTitle  String?
+  seoDesc   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sections Section[]
+
+  @@unique([slug, lang])
+  @@index([slug])
+  @@index([lang])
+}
+
+model Section {
+  id        String   @id @default(cuid())
+  pageId    String
+  type      String
+  order     Int      @default(0)
+  enabled   Boolean  @default(true)
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId, order])
+}
+
 model LiveSession {
   id              String   @id @default(cuid())
   title           String

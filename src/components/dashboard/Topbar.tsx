@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import ProfileMenu from "./ProfileMenu";
+import type { Role } from "@prisma/client";
 
 export default async function Topbar({ lang }: { lang: string }) {
   const session = await getServerSession(authOptions);
@@ -18,6 +19,7 @@ export default async function Topbar({ lang }: { lang: string }) {
           lang={lang}
           name={session.user.name}
           email={session.user.email}
+          role={session.user.role as Role}
         />
       ) : null}
     </header>

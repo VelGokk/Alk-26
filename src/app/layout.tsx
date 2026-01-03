@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display, Poppins } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
+import { cssVariables } from "@/styles/tokens";
 
 const headingFont = Playfair_Display({
   subsets: ["latin"],
@@ -34,10 +35,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const rootStyle = cssVariables as React.CSSProperties;
+
   return (
     <html
       lang="es-AR"
       className={`${headingFont.variable} ${bodyFont.variable} ${uiFont.variable}`}
+      style={rootStyle}
     >
       <body className="antialiased">
         <Providers>{children}</Providers>

@@ -2,6 +2,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { Course } from "@prisma/client";
 import { formatCurrency } from "@/lib/utils";
+import { DEFAULT_LOCALE, isLocale, type AppLocale } from "@/lib/i18n";
+import esAr from "@/lib/dictionaries/es-ar.json";
+import esMx from "@/lib/dictionaries/es-mx.json";
+import en from "@/lib/dictionaries/en.json";
+
+const dictionaries: Record<AppLocale, typeof esAr> = {
+  "es-ar": esAr,
+  "es-mx": esMx,
+  en,
+};
 
 type CourseCardProps = {
   course: Course;
@@ -9,6 +19,7 @@ type CourseCardProps = {
 };
 
 export default function CourseCard({ course, lang }: CourseCardProps) {
+  const dictionary = dictionaries[isLocale(lang) ? lang : DEFAULT_LOCALE];
   return (
     <div className="glass-panel rounded-2xl p-4 shadow-glow">
       <div className="relative h-40 w-full overflow-hidden rounded-xl bg-black/5">
@@ -21,7 +32,7 @@ export default function CourseCard({ course, lang }: CourseCardProps) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm uppercase tracking-[0.3em] text-zinc-500">
-            ALKAYA
+            {dictionary.brand}
           </div>
         )}
       </div>
@@ -39,7 +50,7 @@ export default function CourseCard({ course, lang }: CourseCardProps) {
             href={`/${lang}/courses`}
             className="text-xs uppercase tracking-[0.2em] text-brass"
           >
-            Ver
+            {dictionary.courseCard.view}
           </Link>
         </div>
       </div>

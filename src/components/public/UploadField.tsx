@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dictionary from "@/lib/dictionaries/es-ar.json";
 
 type UploadFieldProps = {
   name: string;
@@ -48,7 +49,9 @@ export default function UploadField({
       />
       <input type="file" onChange={handleFileChange} />
       {uploading ? (
-        <p className="text-xs text-zinc-500">Subiendo...</p>
+        <p className="text-xs text-zinc-500">
+          {dictionary.uploadField.uploading}
+        </p>
       ) : null}
     </div>
   );

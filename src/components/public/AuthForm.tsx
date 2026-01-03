@@ -2,7 +2,17 @@
 
 import { getSession, signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useId, useState } from "react";
+import { DEFAULT_LOCALE, isLocale, type AppLocale } from "@/lib/i18n";
+import esAr from "@/lib/dictionaries/es-ar.json";
+import esMx from "@/lib/dictionaries/es-mx.json";
+import en from "@/lib/dictionaries/en.json";
+
+const dictionaries: Record<AppLocale, typeof esAr> = {
+  "es-ar": esAr,
+  "es-mx": esMx,
+  en,
+};
 
 type AuthFormProps = {
   lang: string;
@@ -18,6 +28,8 @@ export default function AuthForm({
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextPath = searchParams.get("next");
+  const dictionary = dictionaries[isLocale(lang) ? lang : DEFAULT_LOCALE];
+  const auth = dictionary.auth;
   const roleHome: Record<string, string> = {
     SUPERADMIN: "/super-admin",
     ADMIN: "/admin",
@@ -30,6 +42,10 @@ export default function AuthForm({
   const [mode, setMode] = useState<"login" | "register">("login");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const panelId = useId();
+  const loginPanelId = `${panelId}-login`;
+  const registerPanelId = `${panelId}-register`;
+  const isLogin = mode === "login";
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -46,7 +62,7 @@ export default function AuthForm({
     });
 
     if (result?.error) {
-      setError("Credenciales invalidas.");
+      setError(auth.errors.invalidCredentials);
       setLoading(false);
       return;
     }
@@ -73,7 +89,7 @@ export default function AuthForm({
     });
     const data = await res.json();
     if (!res.ok) {
-      setError(data?.error ?? "Error al crear la cuenta.");
+      setError(data?.error ?? auth.errors.register);
       setLoading(false);
       return;
     }
@@ -90,32 +106,45 @@ export default function AuthForm({
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-2 rounded-full border border-black/10 bg-white p-1 text-xs uppercase tracking-[0.2em]">
+      <div
+        className="flex gap-2 rounded-full border border-black/10 bg-white p-1 text-xs uppercase tracking-[0.2em]"
+        role="group"
+        aria-label="Selector de acceso"
+      >
         <button
           type="button"
           onClick={() => setMode("login")}
+          aria-expanded={isLogin}
+          aria-controls={loginPanelId}
           className={`flex-1 rounded-full px-4 py-2 ${
             mode === "login" ? "bg-ink text-white" : "text-zinc-600"
           }`}
         >
-          Ingresar
+          {auth.tabs.login}
         </button>
         <button
           type="button"
           onClick={() => setMode("register")}
+          aria-expanded={!isLogin}
+          aria-controls={registerPanelId}
           className={`flex-1 rounded-full px-4 py-2 ${
             mode === "register" ? "bg-ink text-white" : "text-zinc-600"
           }`}
         >
-          Crear cuenta
+          {auth.tabs.register}
         </button>
       </div>
 
-      {mode === "login" ? (
-        <form onSubmit={handleLogin} className="space-y-4">
+      <form
+        id={loginPanelId}
+        onSubmit={handleLogin}
+        className="space-y-4"
+        hidden={!isLogin}
+        aria-hidden={!isLogin}
+      >
           <div>
             <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-              Email
+              {auth.labels.email}
             </label>
             <input
               name="email"
@@ -126,7 +155,7 @@ export default function AuthForm({
           </div>
           <div>
             <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-              Password
+              {auth.labels.password}
             </label>
             <input
               name="password"
@@ -143,14 +172,19 @@ export default function AuthForm({
             disabled={loading}
             className="w-full rounded-full bg-ink px-6 py-3 text-xs uppercase tracking-[0.2em] text-white"
           >
-            {loading ? "Ingresando..." : "Ingresar"}
+            {loading ? auth.buttons.loginLoading : auth.buttons.login}
           </button>
-        </form>
-      ) : (
-        <form onSubmit={handleRegister} className="space-y-4">
+      </form>
+      <form
+        id={registerPanelId}
+        onSubmit={handleRegister}
+        className="space-y-4"
+        hidden={isLogin}
+        aria-hidden={isLogin}
+      >
           <div>
             <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-              Nombre
+              {auth.labels.name}
             </label>
             <input
               name="name"
@@ -161,7 +195,7 @@ export default function AuthForm({
           </div>
           <div>
             <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-              Email
+              {auth.labels.email}
             </label>
             <input
               name="email"
@@ -172,7 +206,7 @@ export default function AuthForm({
           </div>
           <div>
             <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-              Password
+              {auth.labels.password}
             </label>
             <input
               name="password"
@@ -190,15 +224,14 @@ export default function AuthForm({
             disabled={loading}
             className="w-full rounded-full bg-ink px-6 py-3 text-xs uppercase tracking-[0.2em] text-white"
           >
-            {loading ? "Creando..." : "Crear cuenta"}
+            {loading ? auth.buttons.registerLoading : auth.buttons.register}
           </button>
-        </form>
-      )}
+      </form>
 
       {(showGoogle || showGitHub) && (
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-            Social login
+            {auth.social.title}
           </p>
           <div className="grid gap-2">
             {showGoogle ? (
@@ -207,7 +240,7 @@ export default function AuthForm({
                 onClick={() => signIn("google")}
                 className="rounded-full border border-black/10 px-4 py-2 text-xs uppercase tracking-[0.2em]"
               >
-                Google
+                {auth.social.google}
               </button>
             ) : null}
             {showGitHub ? (
@@ -216,7 +249,7 @@ export default function AuthForm({
                 onClick={() => signIn("github")}
                 className="rounded-full border border-black/10 px-4 py-2 text-xs uppercase tracking-[0.2em]"
               >
-                GitHub
+                {auth.social.github}
               </button>
             ) : null}
           </div>

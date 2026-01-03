@@ -6,7 +6,8 @@
     "formacion": "Formacion",
     "recursos": "Recursos",
     "nosotros": "Nosotros",
-    "contacto": "Contacto"
+    "contacto": "Contacto",
+    "menu": "Menu"
   },
   "cta": {
     "login": "Entrar",
@@ -20,5 +21,73 @@
   "labels": {
     "language": "Idioma",
     "roles": "Roles"
+  },
+  "footer": {
+    "description": "Consultora de coaching ontologico para lideres, equipos y organizaciones que necesitan sostener el cambio.",
+    "mantra": "No cambiamos personas. Cambiamos como observas y decidis.",
+    "exploreTitle": "Explorar",
+    "contactTitle": "Contacto",
+    "legalTitle": "Legal",
+    "contactEmail": "hola@alkaya.com",
+    "contactPhone": "+54 11 5555-5555",
+    "contactRegions": "Buenos Aires - CDMX - Remoto",
+    "privacy": "Politica de privacidad",
+    "terms": "Terminos",
+    "copyright": "(c) 2026 ALKAYA"
+  },
+  "contactForm": {
+    "nameLabel": "Nombre",
+    "emailLabel": "Email",
+    "tipoLabel": "Tipo de consulta",
+    "tipos": {
+      "consultoria": "Consultoria",
+      "formacion": "Formacion",
+      "otro": "Otro"
+    },
+    "messageLabel": "Mensaje",
+    "submitLabel": "Iniciar conversacion",
+    "successTitle": "Mensaje enviado",
+    "successMessage": "Gracias por escribirnos. Te respondemos en breve."
+  },
+  "auth": {
+    "tabs": {
+      "login": "Ingresar",
+      "register": "Crear cuenta"
+    },
+    "labels": {
+      "email": "Email",
+      "password": "Password",
+      "name": "Nombre"
+    },
+    "errors": {
+      "invalidCredentials": "Credenciales invalidas.",
+      "register": "Error al crear la cuenta."
+    },
+    "buttons": {
+      "login": "Ingresar",
+      "loginLoading": "Ingresando...",
+      "register": "Crear cuenta",
+      "registerLoading": "Creando..."
+    },
+    "social": {
+      "title": "Social login",
+      "google": "Google",
+      "github": "GitHub"
+    }
+  },
+  "checkout": {
+    "loading": "Procesando...",
+    "pay": "Pagar con Mercado Pago",
+    "errorInit": "No se pudo iniciar el checkout.",
+    "errorStart": "Error al iniciar el pago."
+  },
+  "courseCard": {
+    "view": "Ver"
+  },
+  "uploadField": {
+    "uploading": "Subiendo..."
+  },
+  "brandMark": {
+    "tagline": "Consultoria Ontologica"
   }
 }
