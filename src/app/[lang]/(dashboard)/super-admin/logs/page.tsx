@@ -19,7 +19,7 @@ export default async function LogsPage({
     <div className="space-y-6">
       <div>
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">Logs</p>
-        <h1 className="font-heading text-3xl">Seguridad & auditoría</h1>
+        <h1 className="font-heading text-3xl">Seguridad & auditoria</h1>
       </div>
 
       <div className="flex flex-wrap gap-2 text-xs uppercase tracking-[0.2em]">
@@ -43,7 +43,7 @@ export default async function LogsPage({
           logs.map((log) => (
             <div key={log.id} className="glass-panel rounded-2xl p-4">
               <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-                {log.level} · {log.action}
+                {log.level} - {log.action}
               </p>
               <p className="mt-2 text-sm text-zinc-600">{log.message}</p>
             </div>
@@ -53,3 +53,4 @@ export default async function LogsPage({
     </div>
   );
 }
+

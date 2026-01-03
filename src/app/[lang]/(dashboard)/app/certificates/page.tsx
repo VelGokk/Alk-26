@@ -27,7 +27,7 @@ export default async function CertificatesPage({
       </div>
       {completed.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-black/10 p-6 text-sm text-zinc-600">
-          Finalizá cursos para desbloquear certificados.
+          Finaliza cursos para desbloquear certificados.
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
@@ -50,3 +50,4 @@ export default async function CertificatesPage({
     </div>
   );
 }
+

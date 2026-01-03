@@ -32,16 +32,17 @@ export default async function CertificateDetail({
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
           ALKAYA LMS
         </p>
-        <p className="font-heading text-2xl">Certificado de finalización</p>
+        <p className="font-heading text-2xl">Certificado de finalizacion</p>
         <p className="text-sm text-zinc-600">
           Se certifica que{" "}
           <strong>{enrollment.user.name ?? enrollment.user.email}</strong>{" "}
-          completó el curso <strong>{enrollment.course.title}</strong>.
+          completo el curso <strong>{enrollment.course.title}</strong>.
         </p>
         <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-          Placeholder funcional · Exportación PDF próximamente
+          Placeholder funcional - Exportacion PDF proximamente
         </p>
       </div>
     </div>
   );
 }
+

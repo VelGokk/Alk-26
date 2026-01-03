@@ -15,7 +15,7 @@ export default async function ResourcesPage() {
       </div>
       {resources.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-black/10 p-8 text-center text-sm text-zinc-600">
-          Próximamente publicaremos recursos descargables.
+          Proximamente publicaremos recursos descargables.
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2">

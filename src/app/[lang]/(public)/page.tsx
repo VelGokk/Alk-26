@@ -54,7 +54,7 @@ export default async function HomePage({
             </div>
             <div>
               <p className="text-2xl font-heading text-ink">97%</p>
-              <p>Satisfacción</p>
+              <p>Satisfaccion</p>
             </div>
             <div>
               <p className="text-2xl font-heading text-ink">24/7</p>
@@ -68,7 +68,7 @@ export default async function HomePage({
               Experience stack
             </p>
             <h2 className="font-heading text-2xl">
-              Gestión integral para academias modernas
+              Gestion integral para academias modernas
             </h2>
             <ul className="space-y-3 text-sm text-zinc-600">
               <li>Dashboards por rol con visibilidad total.</li>
@@ -90,12 +90,12 @@ export default async function HomePage({
             href={`/${params.lang}/courses`}
             className="text-xs uppercase tracking-[0.2em] text-brass"
           >
-            Ver catálogo
+            Ver catalogo
           </Link>
         </div>
         {courses.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-black/10 p-8 text-center text-sm text-zinc-600">
-            Todavía no hay cursos publicados. Cargá el primero desde el panel
+            Todavia no hay cursos publicados. Carga el primero desde el panel
             de instructor.
           </div>
         ) : (
@@ -109,3 +109,4 @@ export default async function HomePage({
     </div>
   );
 }
+

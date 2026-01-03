@@ -5,7 +5,7 @@ export default function CheckoutPending({ params }: { params: { lang: string } }
     <div className="space-y-6 text-center">
       <h1 className="font-heading text-3xl">Pago pendiente</h1>
       <p className="text-sm text-zinc-600">
-        El pago quedó pendiente. Te avisaremos cuando se confirme.
+        El pago quedo pendiente. Te avisaremos cuando se confirme.
       </p>
       <Link
         href={`/${params.lang}/app/my-courses`}

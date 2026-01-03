@@ -29,7 +29,7 @@ export default async function CheckoutPage({ params }: { params: { lang: string 
 
       {!cart || cart.items.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-black/10 p-8 text-center text-sm text-zinc-600">
-          Tu carrito está vacío. Volvé al catálogo y agregá cursos.
+          Tu carrito esta vacio. Volve al catalogo y agrega cursos.
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[1.4fr_0.6fr]">
@@ -60,8 +60,8 @@ export default async function CheckoutPage({ params }: { params: { lang: string 
             </div>
             <CheckoutButton />
             <p className="text-xs text-zinc-500">
-              El pago se procesa vía Mercado Pago. Si no está configurado,
-              recibirás un aviso.
+              El pago se procesa via Mercado Pago. Si no esta configurado,
+              recibiras un aviso.
             </p>
           </div>
         </div>
@@ -69,3 +69,4 @@ export default async function CheckoutPage({ params }: { params: { lang: string 
     </div>
   );
 }
+

@@ -12,7 +12,7 @@ export default async function LocaleLayout({
   params,
 }: {
   children: ReactNode;
-  params: any;
+  params: { lang?: string };
 }) {
   const settings = await getSystemSettings();
   const lang = params.lang ?? DEFAULT_LOCALE;

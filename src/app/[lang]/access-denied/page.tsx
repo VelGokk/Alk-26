@@ -7,10 +7,10 @@ export default function AccessDeniedPage({ params }: { params: { lang: string } 
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
           Acceso denegado
         </p>
-        <h1 className="font-heading text-3xl">No tenés permisos</h1>
+        <h1 className="font-heading text-3xl">No tenes permisos</h1>
       </div>
       <p className="text-sm text-zinc-600">
-        Tu rol actual no permite acceder a esta sección.
+        Tu rol actual no permite acceder a esta seccion.
       </p>
       <Link
         href={`/${params.lang}`}
@@ -21,3 +21,4 @@ export default function AccessDeniedPage({ params }: { params: { lang: string } 
     </div>
   );
 }
+

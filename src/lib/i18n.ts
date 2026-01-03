@@ -4,8 +4,8 @@ export type AppLocale = (typeof SUPPORTED_LOCALES)[number];
 export const DEFAULT_LOCALE: AppLocale = "es-ar";
 
 export const LOCALE_LABELS: Record<AppLocale, string> = {
-  "es-ar": "Español (AR)",
-  "es-mx": "Español (MX)",
+  "es-ar": "Espanol (AR)",
+  "es-mx": "Espanol (MX)",
   en: "English",
 };
 

@@ -16,7 +16,7 @@ export default async function AdminCoursesPage() {
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
           Cursos
         </p>
-        <h1 className="font-heading text-3xl">Gestión de contenidos</h1>
+        <h1 className="font-heading text-3xl">Gestion de contenidos</h1>
       </div>
       <div className="space-y-4">
         {courses.map((course) => (

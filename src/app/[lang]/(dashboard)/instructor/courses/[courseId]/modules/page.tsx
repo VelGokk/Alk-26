@@ -26,7 +26,7 @@ export default async function CourseModulesPage({
     <div className="space-y-8">
       <div>
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
-          Módulos y lecciones
+          Modulos y lecciones
         </p>
         <h1 className="font-heading text-3xl">{course.title}</h1>
       </div>
@@ -34,19 +34,19 @@ export default async function CourseModulesPage({
       <form action={createModule} className="glass-panel rounded-2xl p-6 space-y-3">
         <input type="hidden" name="courseId" value={course.id} />
         <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-          Nuevo módulo
+          Nuevo modulo
         </label>
         <div className="flex flex-col gap-3 md:flex-row">
           <input
             name="title"
-            placeholder="Título del módulo"
+            placeholder="Titulo del modulo"
             className="flex-1 rounded-xl border border-black/10 bg-white px-4 py-2 text-sm"
           />
           <button
             type="submit"
             className="rounded-full bg-ink px-4 py-2 text-xs uppercase tracking-[0.2em] text-white"
           >
-            Crear módulo
+            Crear modulo
           </button>
         </div>
       </form>
@@ -54,14 +54,14 @@ export default async function CourseModulesPage({
       <div className="space-y-6">
         {course.modules.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-black/10 p-6 text-sm text-zinc-600">
-            Agregá módulos para empezar a cargar lecciones.
+            Agrega modulos para empezar a cargar lecciones.
           </div>
         ) : (
           course.modules.map((module) => (
             <div key={module.id} className="glass-panel rounded-2xl p-6 space-y-4">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-                  Módulo
+                  Modulo
                 </p>
                 <h2 className="font-heading text-xl">{module.title}</h2>
               </div>
@@ -70,7 +70,7 @@ export default async function CourseModulesPage({
                 <div className="grid gap-3 md:grid-cols-3">
                   <input
                     name="title"
-                    placeholder="Título de la lección"
+                    placeholder="Titulo de la leccion"
                     className="rounded-xl border border-black/10 bg-white px-4 py-2 text-sm"
                   />
                   <input
@@ -92,14 +92,14 @@ export default async function CourseModulesPage({
                   type="submit"
                   className="rounded-full border border-black/10 px-3 py-2 text-xs uppercase tracking-[0.2em]"
                 >
-                  Agregar lección
+                  Agregar leccion
                 </button>
               </form>
 
               <div className="space-y-2">
                 {module.lessons.length === 0 ? (
                   <p className="text-sm text-zinc-600">
-                    Este módulo todavía no tiene lecciones.
+                    Este modulo todavia no tiene lecciones.
                   </p>
                 ) : (
                   module.lessons.map((lesson) => (
@@ -127,7 +127,7 @@ export default async function CourseModulesPage({
           <div className="grid gap-3 md:grid-cols-2">
             <input
               name="title"
-              placeholder="Título del recurso"
+              placeholder="Titulo del recurso"
               className="rounded-xl border border-black/10 bg-white px-4 py-2 text-sm"
             />
             <select
@@ -140,7 +140,7 @@ export default async function CourseModulesPage({
               <option value="OTHER">Otro</option>
             </select>
           </div>
-          <UploadField name="url" label="Subí o pegá URL" />
+          <UploadField name="url" label="Subi o pega URL" />
           <button
             type="submit"
             className="rounded-full bg-ink px-4 py-2 text-xs uppercase tracking-[0.2em] text-white"
@@ -151,7 +151,7 @@ export default async function CourseModulesPage({
 
         {course.resources.length === 0 ? (
           <p className="text-sm text-zinc-600">
-            Aún no hay recursos cargados.
+            Aun no hay recursos cargados.
           </p>
         ) : (
           <div className="space-y-2 text-sm text-zinc-600">
@@ -169,3 +169,4 @@ export default async function CourseModulesPage({
     </div>
   );
 }
+

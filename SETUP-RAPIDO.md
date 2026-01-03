@@ -24,5 +24,5 @@ Credenciales seed (password: `Alkaya123!`):
 - user@alkaya.ai
 
 Notas:
-- Si no configur�s Mercado Pago / Resend / Cloudinary / Mux / OpenAI, la app no se rompe: muestra “disabled”.
+- Si no configuras Mercado Pago / Resend / Cloudinary / Mux / OpenAI, la app no se rompe: muestra "disabled".
 

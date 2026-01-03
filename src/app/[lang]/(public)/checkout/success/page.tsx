@@ -5,7 +5,7 @@ export default function CheckoutSuccess({ params }: { params: { lang: string } }
     <div className="space-y-6 text-center">
       <h1 className="font-heading text-3xl">Pago aprobado</h1>
       <p className="text-sm text-zinc-600">
-        Tu compra fue confirmada. Ya podés acceder a tus cursos.
+        Tu compra fue confirmada. Ya podes acceder a tus cursos.
       </p>
       <Link
         href={`/${params.lang}/app/my-courses`}
@@ -16,3 +16,4 @@ export default function CheckoutSuccess({ params }: { params: { lang: string } }
     </div>
   );
 }
+

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json().catch(() => ({}));
-  const prompt = body?.prompt ?? "Gener√ un quiz breve sobre el curso.";
+  const prompt = body?.prompt ?? "Genera un quiz breve sobre el curso.";
   const result = await generateQuiz(prompt);
   return NextResponse.json({ result });
 }

@@ -5,7 +5,7 @@ export default function CheckoutFailure({ params }: { params: { lang: string } }
     <div className="space-y-6 text-center">
       <h1 className="font-heading text-3xl">Pago rechazado</h1>
       <p className="text-sm text-zinc-600">
-        No pudimos procesar el pago. Intentá nuevamente o usá otro medio.
+        No pudimos procesar el pago. Intenta nuevamente o usa otro medio.
       </p>
       <Link
         href={`/${params.lang}/checkout`}
@@ -16,3 +16,4 @@ export default function CheckoutFailure({ params }: { params: { lang: string } }
     </div>
   );
 }
+

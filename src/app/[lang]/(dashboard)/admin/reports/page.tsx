@@ -18,7 +18,7 @@ export default async function AdminReportsPage() {
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
           Reportes
         </p>
-        <h1 className="font-heading text-3xl">Indicadores básicos</h1>
+        <h1 className="font-heading text-3xl">Indicadores basicos</h1>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="glass-panel rounded-2xl p-6">
@@ -47,3 +47,4 @@ export default async function AdminReportsPage() {
     </div>
   );
 }
+

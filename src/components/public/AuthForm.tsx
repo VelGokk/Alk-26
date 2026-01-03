@@ -46,7 +46,7 @@ export default function AuthForm({
     });
 
     if (result?.error) {
-      setError("Credenciales inv√lidas.");
+      setError("Credenciales invalidas.");
       setLoading(false);
       return;
     }

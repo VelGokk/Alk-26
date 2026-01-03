@@ -69,7 +69,7 @@ export default async function BrandingPage() {
 
       <div className="glass-panel rounded-2xl p-6">
         <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-          Preview rápido
+          Preview rapido
         </p>
         <div className="mt-4 flex items-center gap-4">
           <div
@@ -89,3 +89,4 @@ export default async function BrandingPage() {
     </div>
   );
 }
+

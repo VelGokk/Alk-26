@@ -23,11 +23,11 @@ export default async function CoursesPage({
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
           Cursos
         </p>
-        <h1 className="font-heading text-3xl">Catálogo completo</h1>
+        <h1 className="font-heading text-3xl">Catlogo completo</h1>
       </div>
       {courses.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-black/10 p-8 text-center text-sm text-zinc-600">
-          No hay cursos publicados todavía.
+          No hay cursos publicados todavia.
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-2">
@@ -80,3 +80,4 @@ export default async function CoursesPage({
     </div>
   );
 }
+

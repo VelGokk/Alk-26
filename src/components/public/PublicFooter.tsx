@@ -34,10 +34,11 @@ export default function PublicFooter({ lang }: { lang: string }) {
         </div>
       </div>
       <div className="border-t border-black/10 px-4 py-4 text-center text-xs uppercase tracking-[0.2em] text-zinc-500">
-        �(c) 2026 ALKAYA LMS
+        (c) 2026 ALKAYA LMS
       </div>
     </footer>
   );
 }
+
 
 

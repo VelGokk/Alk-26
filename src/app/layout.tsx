@@ -18,7 +18,7 @@ const bodyFont = Manrope({
 export const metadata: Metadata = {
   title: "ALKAYA LMS",
   description:
-    "Plataforma premium de formación con analítica, pagos y dashboards por rol.",
+    "Plataforma premium de formacion con analitica, pagos y dashboards por rol.",
   metadataBase: new URL("https://alkaya.example"),
   applicationName: "ALKAYA LMS",
 };

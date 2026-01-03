@@ -31,7 +31,7 @@ export default async function EditCoursePage({
         <input type="hidden" name="courseId" value={course.id} />
         <div>
           <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-            Título
+            Titulo
           </label>
           <input
             name="title"
@@ -41,7 +41,7 @@ export default async function EditCoursePage({
         </div>
         <div>
           <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-            Descripción
+            Descripcion
           </label>
           <textarea
             name="description"

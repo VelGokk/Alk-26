@@ -17,7 +17,7 @@ export async function GET() {
       timestamp: new Date().toISOString(),
       integrations,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { status: "error", message: "DB unreachable" },
       { status: 500 }

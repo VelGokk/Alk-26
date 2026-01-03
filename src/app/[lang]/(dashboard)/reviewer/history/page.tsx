@@ -21,7 +21,7 @@ export default async function ReviewerHistoryPage() {
       </div>
       {reviews.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-black/10 p-6 text-sm text-zinc-600">
-          Todavía no hay revisiones cerradas.
+          Todavia no hay revisiones cerradas.
         </div>
       ) : (
         <div className="space-y-3">

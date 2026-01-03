@@ -16,7 +16,7 @@ export default async function NewCoursePage() {
       <form action={createCourse} className="glass-panel rounded-2xl p-6 space-y-4">
         <div>
           <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-            Título
+            Titulo
           </label>
           <input
             name="title"
@@ -26,7 +26,7 @@ export default async function NewCoursePage() {
         </div>
         <div>
           <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-            Descripción
+            Descripcion
           </label>
           <textarea
             name="description"

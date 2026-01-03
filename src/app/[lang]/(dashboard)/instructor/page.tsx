@@ -17,7 +17,7 @@ export default async function InstructorDashboard() {
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
           Instructor
         </p>
-        <h1 className="font-heading text-3xl">Tus métricas</h1>
+        <h1 className="font-heading text-3xl">Tus metricas</h1>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="glass-panel rounded-2xl p-4">
@@ -31,10 +31,11 @@ export default async function InstructorDashboard() {
             Estado principal
           </p>
           <p className="mt-2 text-sm text-zinc-600">
-            Seguí creando contenido y enviá cursos a revisión.
+            Segui creando contenido y envi cursos a revision.
           </p>
         </div>
       </div>
     </div>
   );
 }
+

@@ -14,7 +14,7 @@ export default function AuthPage({ params }: { params: { lang: string } }) {
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
           Acceso
         </p>
-        <h1 className="font-heading text-3xl">Ingresá a ALKAYA</h1>
+        <h1 className="font-heading text-3xl">Ingresa a ALKAYA</h1>
       </div>
       <div className="glass-panel rounded-3xl p-8">
         <AuthForm
@@ -26,3 +26,4 @@ export default function AuthPage({ params }: { params: { lang: string } }) {
     </div>
   );
 }
+

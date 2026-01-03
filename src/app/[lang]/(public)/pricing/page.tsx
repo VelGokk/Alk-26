@@ -5,7 +5,7 @@ const plans = [
     name: "Starter",
     price: "ARS 24.000",
     description: "Para equipos chicos con foco en contenido base.",
-    features: ["3 cursos activos", "Soporte estándar", "Reportes básicos"],
+    features: ["3 cursos activos", "Soporte estndar", "Reportes bsicos"],
   },
   {
     name: "Pro",
@@ -44,7 +44,7 @@ export default function PricingPage({ params }: { params: { lang: string } }) {
             <p className="mt-3 text-sm text-zinc-600">{plan.description}</p>
             <ul className="mt-4 space-y-2 text-sm text-zinc-600">
               {plan.features.map((feature) => (
-                <li key={feature}>• {feature}</li>
+                <li key={feature}>* {feature}</li>
               ))}
             </ul>
             <Link
@@ -59,3 +59,4 @@ export default function PricingPage({ params }: { params: { lang: string } }) {
     </div>
   );
 }
+

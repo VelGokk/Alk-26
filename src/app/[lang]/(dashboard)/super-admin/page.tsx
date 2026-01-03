@@ -69,7 +69,7 @@ export default async function SuperAdminDashboard() {
           </div>
         </div>
         <div className="glass-panel rounded-2xl p-6">
-          <h2 className="font-heading text-xl">Últimos logs</h2>
+          <h2 className="font-heading text-xl">Ultimos logs</h2>
           <div className="mt-4 space-y-3 text-sm text-zinc-600">
             {logs.length === 0 ? (
               <p>No hay registros recientes.</p>
@@ -77,7 +77,7 @@ export default async function SuperAdminDashboard() {
               logs.map((log) => (
                 <div key={log.id} className="border-b border-black/5 pb-2">
                   <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-                    {log.level} · {log.action}
+                    {log.level} - {log.action}
                   </p>
                   <p>{log.message}</p>
                 </div>
@@ -89,3 +89,4 @@ export default async function SuperAdminDashboard() {
     </div>
   );
 }
+

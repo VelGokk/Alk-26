@@ -14,7 +14,7 @@ export default async function SuperAdminUsersPage() {
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
           Usuarios & roles
         </p>
-        <h1 className="font-heading text-3xl">Gestión de accesos</h1>
+        <h1 className="font-heading text-3xl">Gestion de accesos</h1>
       </div>
 
       <div className="space-y-4">

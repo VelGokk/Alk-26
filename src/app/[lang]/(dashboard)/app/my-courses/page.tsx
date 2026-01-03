@@ -27,7 +27,7 @@ export default async function MyCoursesPage() {
 
       {enrollments.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-black/10 p-6 text-sm text-zinc-600">
-          Todavía no compraste cursos.
+          Todavia no compraste cursos.
         </div>
       ) : (
         <div className="space-y-6">

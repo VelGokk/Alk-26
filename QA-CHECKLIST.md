@@ -1,7 +1,7 @@
 # QA CHECKLIST (Local + Prod)
 
 ## Base
-- [ ] `npm run env:check` sin faltantes críticos.
+- [ ] `npm run env:check` sin faltantes criticos.
 - [ ] `npm run lint` sin errores.
 - [ ] `npm run typecheck` sin errores.
 - [ ] `npm run build` exitoso.
@@ -16,7 +16,7 @@
 - [ ] Acceso denegado a rutas no permitidas.
 
 ## Superadmin
-- [ ] Dashboard muestra m�(c)tricas y logs.
+- [ ] Dashboard muestra metricas y logs.
 - [ ] Cambiar rol y activar/desactivar usuarios.
 - [ ] Branding guarda cambios.
 - [ ] Mantenimiento togglea y muestra banner.
@@ -26,13 +26,13 @@
 - [ ] Listado de cursos y cambio de estado.
 - [ ] Listado de usuarios.
 - [ ] Reportes de pagos y enrollments.
-- [ ] CRUD b�sico de cupones.
+- [ ] CRUD basico de cupones.
 
 ## Instructor
 - [ ] Crear curso, editar, subir thumbnail.
-- [ ] Crear módulos y lecciones.
+- [ ] Crear modulos y lecciones.
 - [ ] Subir recursos.
-- [ ] Enviar curso a revisión.
+- [ ] Enviar curso a revision.
 
 ## Reviewer
 - [ ] Ver pendientes.
@@ -44,16 +44,16 @@
 - [ ] Resolver con acciones.
 
 ## Alumno
-- [ ] Cat�logo visible.
+- [ ] Catalogo visible.
 - [ ] Agregar a carrito y checkout.
 - [ ] Pago aprobado genera enrollment.
-- [ ] Ver “Mis cursos”.
+- [ ] Ver "Mis cursos".
 - [ ] Marcar lecciones como completadas.
 - [ ] Certificado disponible al 100%.
 
 ## Integraciones (si configuradas)
 - [ ] Mercado Pago crea preferencia y webhook actualiza pago.
-- [ ] Resend envía email de bienvenida y compra.
+- [ ] Resend envia email de bienvenida y compra.
 - [ ] Cloudinary sube archivos.
 - [ ] Mux crea live sessions.
 - [ ] AI responde en `/api/ai/quiz`.

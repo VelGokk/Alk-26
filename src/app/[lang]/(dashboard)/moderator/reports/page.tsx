@@ -17,7 +17,7 @@ export default async function ModeratorReportsPage() {
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
           Reportes
         </p>
-        <h1 className="font-heading text-3xl">Acciones rápidas</h1>
+        <h1 className="font-heading text-3xl">Acciones rapidas</h1>
       </div>
       {reports.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-black/10 p-6 text-sm text-zinc-600">
@@ -29,7 +29,7 @@ export default async function ModeratorReportsPage() {
             <div key={report.id} className="glass-panel rounded-2xl p-4 space-y-3">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-                  {report.targetType} · {report.status}
+                  {report.targetType} - {report.status}
                 </p>
                 <p className="text-sm text-zinc-600">{report.reason}</p>
               </div>
@@ -62,3 +62,4 @@ export default async function ModeratorReportsPage() {
     </div>
   );
 }
+

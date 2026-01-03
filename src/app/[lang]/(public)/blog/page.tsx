@@ -16,7 +16,7 @@ export default async function BlogPage({ params }: { params: { lang: string } })
       </div>
       {posts.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-black/10 p-8 text-center text-sm text-zinc-600">
-          Todavía no hay publicaciones. Cargá artículos desde el panel
+          Todavia no hay publicaciones. Carga articulos desde el panel
           superadmin.
         </div>
       ) : (
@@ -43,3 +43,4 @@ export default async function BlogPage({ params }: { params: { lang: string } })
     </div>
   );
 }
+

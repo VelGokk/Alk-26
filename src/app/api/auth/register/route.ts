@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   const parsed = schema.safeParse(body);
 
   if (!parsed.success) {
-    return NextResponse.json({ error: "Datos inv√lidos." }, { status: 400 });
+    return NextResponse.json({ error: "Datos invalidos." }, { status: 400 });
   }
 
   const { name, email, password } = parsed.data;
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
   if (existing) {
     return NextResponse.json(
-      { error: "El email ya est√ registrado." },
+      { error: "El email ya esta registrado." },
       { status: 400 }
     );
   }

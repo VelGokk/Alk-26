@@ -41,7 +41,7 @@ export default async function AdminCouponsPage() {
           type="submit"
           className="rounded-full bg-ink px-4 py-2 text-xs uppercase tracking-[0.2em] text-white"
         >
-          Crear cupón
+          Crear cupon
         </button>
       </form>
 
@@ -52,7 +52,7 @@ export default async function AdminCouponsPage() {
               <div>
                 <p className="font-heading text-lg">{coupon.code}</p>
                 <p className="text-sm text-zinc-600">
-                  {coupon.type} · {coupon.amount}
+                  {coupon.type} - {coupon.amount}
                 </p>
               </div>
               <form action={deleteCoupon}>
@@ -71,3 +71,4 @@ export default async function AdminCouponsPage() {
     </div>
   );
 }
+

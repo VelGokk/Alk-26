@@ -85,7 +85,7 @@ export async function submitForReview(formData: FormData) {
       courseId,
       reviewerId: reviewer?.id ?? session.user.id,
       status: "PENDING",
-      comment: "Enviado a revisión",
+      comment: "Enviado a revision",
     },
   });
 
@@ -121,13 +121,13 @@ export async function createLesson(formData: FormData) {
   const contentType = String(formData.get("contentType") ?? "TEXT");
   if (!moduleId || !title) return;
 
-  const module = await prisma.courseModule.findUnique({
+  const courseModule = await prisma.courseModule.findUnique({
     where: { id: moduleId },
     include: { course: true },
   });
   if (
-    !module ||
-    (session.user.role !== Role.SUPERADMIN && module.course.instructorId !== session.user.id)
+    !courseModule ||
+    (session.user.role !== Role.SUPERADMIN && courseModule.course.instructorId !== session.user.id)
   ) {
     return;
   }
@@ -141,7 +141,7 @@ export async function createLesson(formData: FormData) {
     },
   });
 
-  revalidatePath(`/instructor/courses/${module.courseId}/modules`);
+  revalidatePath(`/instructor/courses/${courseModule.courseId}/modules`);
 }
 
 export async function addResource(formData: FormData) {

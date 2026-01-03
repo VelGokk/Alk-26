@@ -16,7 +16,7 @@ export default async function LiveSessionsPanel() {
         </p>
         {!isMuxConfigured ? (
           <p className="mt-2 text-xs text-zinc-500">
-            Configur� MUX_TOKEN_ID y MUX_TOKEN_SECRET para habilitar streaming.
+            Configur MUX_TOKEN_ID y MUX_TOKEN_SECRET para habilitar streaming.
           </p>
         ) : null}
       </div>
@@ -25,7 +25,7 @@ export default async function LiveSessionsPanel() {
         <div className="grid gap-3 md:grid-cols-2">
           <input
             name="title"
-            placeholder="Título de la sesión"
+            placeholder="Titulo de la sesion"
             className="rounded-xl border border-black/10 bg-white px-4 py-2 text-sm"
           />
           <input
@@ -38,7 +38,7 @@ export default async function LiveSessionsPanel() {
           type="submit"
           className="rounded-full bg-ink px-4 py-2 text-xs uppercase tracking-[0.2em] text-white"
         >
-          Crear sesión
+          Crear sesion
         </button>
       </form>
 

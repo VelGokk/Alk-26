@@ -29,14 +29,14 @@ Variables:
 - `MUX_TOKEN_ID`
 - `MUX_TOKEN_SECRET`
 
-Si faltan, el panel muestra “disabled” y no rompe.
+Si faltan, el panel muestra "disabled" y no rompe.
 
 ## IA (OpenAI)
 Variables:
 - `OPENAI_API_KEY`
 
 Endpoint:
-- `POST /api/ai/quiz` (genera quiz si est� configurado)
+- `POST /api/ai/quiz` (genera quiz si esta configurado)
 
 ## OAuth (opcional)
 Google:

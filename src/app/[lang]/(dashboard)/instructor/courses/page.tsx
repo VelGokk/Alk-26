@@ -37,7 +37,7 @@ export default async function InstructorCoursesPage({
 
       {courses.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-black/10 p-8 text-center text-sm text-zinc-600">
-          Todavía no creaste cursos.
+          Todavia no creaste cursos.
         </div>
       ) : (
         <div className="space-y-4">
@@ -63,7 +63,7 @@ export default async function InstructorCoursesPage({
                   href={`/${params.lang}/instructor/courses/${course.id}/modules`}
                   className="rounded-full border border-black/10 px-3 py-2 text-xs uppercase tracking-[0.2em]"
                 >
-                  Módulos
+                  Modulos
                 </Link>
                 {course.status === "DRAFT" ? (
                   <form action={submitForReview}>
@@ -72,7 +72,7 @@ export default async function InstructorCoursesPage({
                       type="submit"
                       className="rounded-full bg-ink px-3 py-2 text-xs uppercase tracking-[0.2em] text-white"
                     >
-                      Enviar a revisión
+                      Enviar a revision
                     </button>
                   </form>
                 ) : null}

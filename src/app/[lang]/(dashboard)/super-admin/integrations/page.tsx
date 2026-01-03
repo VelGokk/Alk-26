@@ -73,7 +73,7 @@ export default async function IntegrationsPage() {
                 className="h-24 w-full rounded-xl border border-black/10 bg-white px-4 py-2 text-sm"
               />
               <p className="text-xs text-zinc-500">
-                Secretos y tokens se gestionan vía variables de entorno.
+                Secretos y tokens se gestionan via variables de entorno.
               </p>
               <button
                 type="submit"

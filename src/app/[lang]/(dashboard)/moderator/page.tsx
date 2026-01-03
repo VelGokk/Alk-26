@@ -12,7 +12,7 @@ export default async function ModeratorDashboard() {
     <div className="space-y-6">
       <div>
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
-          Moderación
+          Moderacion
         </p>
         <h1 className="font-heading text-3xl">Panel de reportes</h1>
       </div>

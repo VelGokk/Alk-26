@@ -38,7 +38,7 @@ export default async function ReviewerPendingPage() {
                   <input type="hidden" name="reviewId" value={review.id} />
                   <textarea
                     name="comment"
-                    placeholder="Comentarios de aprobación"
+                    placeholder="Comentarios de aprobacion"
                     className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm"
                   />
                   <button

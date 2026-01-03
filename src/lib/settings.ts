@@ -9,7 +9,7 @@ export const DEFAULT_BRANDING = {
 
 export const DEFAULT_SETTINGS = {
   maintenanceMode: false,
-  maintenanceMessage: "Estamos realizando mejoras. Volv√(c) en unos minutos.",
+  maintenanceMessage: "Estamos realizando mejoras. Volve en unos minutos.",
 };
 
 export async function getBranding() {

@@ -65,10 +65,10 @@ async function main() {
       where: { slug: "liderazgo-estrategico" },
       update: {},
       create: {
-        title: "Liderazgo Estrat√(c)gico",
+        title: "Liderazgo Estrategico",
         slug: "liderazgo-estrategico",
         description:
-          "Programa intensivo para l√≠deres que necesitan alinear visi√≥n, equipo y resultados.",
+          "Programa intensivo para lideres que necesitan alinear vision, equipo y resultados.",
         price: 45000,
         status: CourseStatus.PUBLISHED,
         instructorId: instructor.id,
@@ -82,7 +82,7 @@ async function main() {
         title: "Productividad Ejecutiva",
         slug: "productividad-ejecutiva",
         description:
-          "Sistema de h√bitos y frameworks para equipos que necesitan foco.",
+          "Sistema de hbitos y frameworks para equipos que necesitan foco.",
         price: 32000,
         status: CourseStatus.DRAFT,
         instructorId: instructor.id,
@@ -94,21 +94,21 @@ async function main() {
     });
 
     if (!moduleExists) {
-      const module = await prisma.courseModule.create({
+      const courseModule = await prisma.courseModule.create({
         data: { courseId: course.id, title: "Fundamentos del liderazgo" },
       });
 
       await prisma.lesson.createMany({
         data: [
           {
-            moduleId: module.id,
-            title: "Visi√≥n y narrativa",
-            content: "C√≥mo alinear equipos con una visi√≥n poderosa.",
+              moduleId: courseModule.id,
+            title: "Vision y narrativa",
+            content: "Como alinear equipos con una vision poderosa.",
           },
           {
-            moduleId: module.id,
-            title: "Rituales de gesti√≥n",
-            content: "Cadencias y h√bitos para mejorar performance.",
+              moduleId: courseModule.id,
+            title: "Rituales de gestion",
+            content: "Cadencias y hbitos para mejorar performance.",
           },
         ],
       });
@@ -133,7 +133,7 @@ async function main() {
     create: {
       title: "Bienvenida a ALKAYA",
       slug: "bienvenida-alkaya",
-      excerpt: "Por qu√(c) creamos una suite LMS premium.",
+      excerpt: "Por que creamos una suite LMS premium.",
       content: "ALKAYA nace para liderar experiencias de aprendizaje premium.",
       published: true,
       publishedAt: new Date(),
@@ -145,7 +145,7 @@ async function main() {
     update: {},
     create: {
       id: "resource-1",
-      title: "Gu√≠a de onboarding",
+      title: "Guia de onboarding",
       description: "Checklist operativo para lanzar tu academia.",
       url: "https://example.com/alkaya-onboarding.pdf",
     },
@@ -168,7 +168,7 @@ async function main() {
     create: {
       id: "system-default",
       maintenanceMode: false,
-      maintenanceMessage: "Estamos realizando mejoras. Volv√(c) en unos minutos.",
+      maintenanceMessage: "Estamos realizando mejoras. Volve en unos minutos.",
     },
   });
 
@@ -195,7 +195,7 @@ async function main() {
     if (user && course) {
       const created = await prisma.comment.create({
         data: {
-          content: "Comentario de prueba para moderaci√≥n.",
+          content: "Comentario de prueba para moderacion.",
           userId: user.id,
           courseId: course.id,
         },
