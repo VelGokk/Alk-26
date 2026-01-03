@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createPreference, isMercadoPagoConfigured } from "@/lib/integrations/mercadopago";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
 import { logEvent } from "@/lib/logger";
 
 export const runtime = "nodejs";
@@ -47,6 +48,8 @@ export async function POST() {
     process.env.NEXTAUTH_URL ||
     "http://localhost:3000";
 
+  const localeBase = `${baseUrl}/${DEFAULT_LOCALE}`;
+
   const preference = await createPreference({
     items: cart.items.map((item) => ({
       title: item.course.title,
@@ -56,9 +59,9 @@ export async function POST() {
     externalReference: payment.id,
     notificationUrl: `${baseUrl}/api/mercadopago/webhook`,
     backUrls: {
-      success: `${baseUrl}/checkout/success`,
-      pending: `${baseUrl}/checkout/pending`,
-      failure: `${baseUrl}/checkout/failure`,
+      success: `${localeBase}/checkout/success`,
+      pending: `${localeBase}/checkout/pending`,
+      failure: `${localeBase}/checkout/failure`,
     },
   });
 
