@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import type { AppLocale } from "@/lib/i18n";
 
-export default function BlogRedirect({ params }: { params: { lang: AppLocale } }) {
-  redirect(`/${params.lang}/recursos`);
+export default async function BlogRedirect({ params }: { params: Promise<{ lang: AppLocale }> }) {
+  const resolvedParams = await params;
+  redirect(`/${resolvedParams.lang}/recursos`);
 }
 

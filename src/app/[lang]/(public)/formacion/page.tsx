@@ -28,7 +28,7 @@ const principles = [
 export default function FormacionPage({
   params,
 }: {
-  params: { lang: AppLocale };
+  params: Promise<{ lang: AppLocale }>;
 }) {
   return (
     <div className="space-y-16">

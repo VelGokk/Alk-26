@@ -27,7 +27,7 @@ const team = [
 export default function NosotrosPage({
   params,
 }: {
-  params: { lang: AppLocale };
+  params: Promise<{ lang: AppLocale }>;
 }) {
   return (
     <div className="space-y-16">

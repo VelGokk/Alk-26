@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 import type { AppLocale } from "@/lib/i18n";
 
-export default function ResourcesRedirect({
+export default async function ResourcesRedirect({
   params,
 }: {
-  params: { lang: AppLocale };
+  params: Promise<{ lang: AppLocale }>;
 }) {
-  redirect(`/${params.lang}/recursos`);
+  const resolvedParams = await params;
+  redirect(`/${resolvedParams.lang}/recursos`);
 }

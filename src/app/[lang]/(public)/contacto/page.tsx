@@ -1,18 +1,20 @@
 import Link from "next/link";
 import type { AppLocale } from "@/lib/i18n";
 
-export default function ContactoPage({
+export default async function ContactoPage({
   params,
   searchParams,
 }: {
-  params: { lang: AppLocale };
-  searchParams?: { tipo?: string };
+  params: Promise<{ lang: AppLocale }>;
+  searchParams?: Promise<{ tipo?: string; enviado?: string }>;
 }) {
+  const resolvedParams = await params;
+  const resolvedSearch = await searchParams;
   const selectedTipo =
-    searchParams?.tipo === "formacion" || searchParams?.tipo === "otro"
-      ? searchParams.tipo
+    resolvedSearch?.tipo === "formacion" || resolvedSearch?.tipo === "otro"
+      ? resolvedSearch.tipo
       : "consultoria";
-  const sent = searchParams?.enviado === "1";
+  const sent = resolvedSearch?.enviado === "1";
 
   return (
     <div className="space-y-16">
@@ -33,7 +35,7 @@ export default function ContactoPage({
           action="/api/contacto"
           method="post"
         >
-          <input type="hidden" name="lang" value={params.lang} />
+          <input type="hidden" name="lang" value={resolvedParams.lang} />
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <label className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500 font-sans">
@@ -119,7 +121,7 @@ export default function ContactoPage({
               Ingresa al dashboard para seguir tu proceso si ya sos cliente.
             </p>
             <Link
-              href={`/${params.lang}/auth`}
+              href={`/${resolvedParams.lang}/auth`}
               className="btn-ghost mt-6"
             >
               Ir al acceso privado

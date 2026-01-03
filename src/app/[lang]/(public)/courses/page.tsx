@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation";
 import type { AppLocale } from "@/lib/i18n";
 
-export default function CoursesRedirect({
+export default async function CoursesRedirect({
   params,
 }: {
-  params: { lang: AppLocale };
+  params: Promise<{ lang: AppLocale }>;
 }) {
-  redirect(`/${params.lang}/formacion/programas`);
+  const resolvedParams = await params;
+  redirect(`/${resolvedParams.lang}/formacion/programas`);
 }
 

@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation";
 import type { AppLocale } from "@/lib/i18n";
 
-export default function PricingRedirect({
+export default async function PricingRedirect({
   params,
 }: {
-  params: { lang: AppLocale };
+  params: Promise<{ lang: AppLocale }>;
 }) {
-  redirect(`/${params.lang}/contacto`);
+  const resolvedParams = await params;
+  redirect(`/${resolvedParams.lang}/contacto`);
 }
 

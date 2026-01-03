@@ -48,11 +48,12 @@ const downloads = [
   },
 ];
 
-export default function RecursosPage({
+export default async function RecursosPage({
   params,
 }: {
-  params: { lang: AppLocale };
+  params: Promise<{ lang: AppLocale }>;
 }) {
+  const resolvedParams = await params;
   return (
     <div className="space-y-16">
       <section className="relative overflow-hidden rounded-3xl border border-line bg-white/80 p-8 shadow-soft sm:p-12 animate-fade-up">

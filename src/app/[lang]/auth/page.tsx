@@ -1,6 +1,7 @@
 import AuthForm from "@/components/public/AuthForm";
 
-export default function AuthPage({ params }: { params: { lang: string } }) {
+export default async function AuthPage({ params }: { params: Promise<{ lang: string }> }) {
+  const resolvedParams = await params;
   const showGoogle = Boolean(
     process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
   );
@@ -18,7 +19,7 @@ export default function AuthPage({ params }: { params: { lang: string } }) {
       </div>
       <div className="glass-panel rounded-3xl p-8">
         <AuthForm
-          lang={params.lang}
+          lang={resolvedParams.lang}
           showGoogle={showGoogle}
           showGitHub={showGitHub}
         />

@@ -4,9 +4,10 @@ import { getDictionary, type AppLocale } from "@/lib/i18n";
 export default async function HomePage({
   params,
 }: {
-  params: { lang: AppLocale };
+  params: Promise<{ lang: AppLocale }>;
 }) {
-  const dictionary = await getDictionary(params.lang);
+  const resolvedParams = await params;
+  const dictionary = await getDictionary(resolvedParams.lang);
   const highlights = [
     {
       label: "Consultoria Ontologica",
@@ -82,10 +83,10 @@ export default async function HomePage({
             </h1>
             <p className="subtitle">{dictionary.hero.subtitle}</p>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Link href={`/${params.lang}/consultoria`} className="btn-primary">
+              <Link href={`/${resolvedParams.lang}/consultoria`} className="btn-primary">
                 Quiero ordenar mi proceso
               </Link>
-              <Link href={`/${params.lang}/formacion`} className="btn-secondary">
+              <Link href={`/${resolvedParams.lang}/formacion`} className="btn-secondary">
                 Quiero formarme
               </Link>
             </div>
@@ -149,7 +150,7 @@ export default async function HomePage({
                 {item.description}
               </p>
               <Link
-                href={`/${params.lang}/contacto`}
+                href={`/${resolvedParams.lang}/contacto`}
                 className="btn-ghost mt-6"
               >
                 Hablemos
@@ -195,14 +196,16 @@ export default async function HomePage({
               Testimonios que hablan de proceso
             </h2>
           </div>
-          <Link href={`/${params.lang}/recursos`} className="btn-ghost">
+          <Link href={`/${resolvedParams.lang}/recursos`} className="btn-ghost">
             Ver recursos
           </Link>
         </div>
         <div className="grid gap-6 lg:grid-cols-3">
           {testimonials.map((item) => (
             <div key={item.name} className="card card-hover">
-              <p className="text-sm text-slate-600">"{item.quote}"</p>
+              <p className="text-sm text-slate-600">
+                &ldquo;{item.quote}&rdquo;
+              </p>
               <div className="mt-6">
                 <p className="font-heading text-lg text-deep">{item.name}</p>
                 <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
@@ -226,7 +229,7 @@ export default async function HomePage({
               Hablemos sobre tu contexto y lo que hoy no esta ocurriendo.
             </p>
           </div>
-          <Link href={`/${params.lang}/contacto`} className="btn-primary">
+          <Link href={`/${resolvedParams.lang}/contacto`} className="btn-primary">
             Hablar con un consultor
           </Link>
         </div>

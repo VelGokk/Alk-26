@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-export default function AccessDeniedPage({ params }: { params: { lang: string } }) {
+export default async function AccessDeniedPage({ params }: { params: Promise<{ lang: string }> }) {
+  const resolvedParams = await params;
   return (
     <div className="mx-auto max-w-lg space-y-6 text-center">
       <div>
@@ -13,7 +14,7 @@ export default function AccessDeniedPage({ params }: { params: { lang: string } 
         Tu rol actual no permite acceder a esta seccion.
       </p>
       <Link
-        href={`/${params.lang}`}
+        href={`/${resolvedParams.lang}`}
         className="inline-flex rounded-full bg-ink px-6 py-3 text-xs uppercase tracking-[0.2em] text-white"
       >
         Volver al inicio
