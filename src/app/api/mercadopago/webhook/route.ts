@@ -58,12 +58,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ status: "unknown_payment" });
   }
 
+  const mergedMetadata = {
+    ...(payment.metadata ?? {}),
+    provider: paymentInfo,
+  };
+
   await prisma.payment.update({
     where: { id: payment.id },
     data: {
       status,
       providerPaymentId: String(paymentId),
-      metadata: paymentInfo as any,
+      metadata: mergedMetadata,
     },
   });
 
@@ -94,7 +99,7 @@ export async function POST(request: Request) {
       await sendEmail({
         to: user.email,
         subject: "Compra confirmada",
-        html: `<p>Tu compra en ALKAYA fue aprobada. Ya podés acceder a tus cursos.</p>`,
+        html: `<p>Tu compra en ALKAYA fue aprobada. Ya podes acceder a tus cursos.</p>`,
       });
     }
   }

@@ -25,7 +25,7 @@ export async function createPreference(payload: {
   const preference = new Preference(getClient());
   return preference.create({
     body: {
-      items: payload.items,
+      items: payload.items as any,
       external_reference: payload.externalReference,
       notification_url: payload.notificationUrl,
       back_urls: payload.backUrls,
