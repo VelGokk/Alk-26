@@ -129,7 +129,6 @@ main {
     border-color: var(--color-alkaya);
     color: var(--color-alkaya);
   }
-  }
 
   .btn-ghost {
     @apply inline-flex items-center justify-center text-xs font-semibold uppercase tracking-[0.24em] transition duration-200 ease-out;
@@ -138,7 +137,6 @@ main {
 
   .btn-ghost:hover {
     color: var(--color-deep);
-  }
   }
 
   .card {
