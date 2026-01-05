@@ -21,3 +21,9 @@ export function slugify(value: string) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)+/g, "");
 }
+
+export function formatPercent(value: number, decimals = 0) {
+  const normalized = Number.isFinite(value) ? value : 0;
+  const clamped = Math.min(100, Math.max(0, normalized));
+  return `${clamped.toFixed(decimals)}%`;
+}

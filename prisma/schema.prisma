@@ -46,12 +46,19 @@ enum ResourceType {
   OTHER
 }
 
-enum LessonContentType {
-  VIDEO
-  TEXT
-  QUIZ
-  LIVE
-}
+  enum LessonContentType {
+    VIDEO
+    TEXT
+    QUIZ
+    LIVE
+  }
+
+  enum LessonVideoProvider {
+    YOUTUBE
+    VIMEO
+    LOOM
+    OTHER
+  }
 
 enum EnrollmentStatus {
   ACTIVE
@@ -68,10 +75,11 @@ enum PaymentStatus {
   CANCELLED
 }
 
-enum PaymentProvider {
-  MERCADOPAGO
-  MANUAL
-}
+  enum PaymentProvider {
+    MERCADOPAGO
+    MANUAL
+    STRIPE
+  }
 
 enum CouponType {
   PERCENT
@@ -318,15 +326,18 @@ model CourseModule {
   @@index([courseId])
 }
 
-model Lesson {
-  id          String            @id @default(cuid())
-  title       String
-  content     String?
-  contentType LessonContentType @default(TEXT)
-  videoUrl    String?
-  order       Int               @default(0)
-  durationMin Int?
-  moduleId    String
+  model Lesson {
+    id          String            @id @default(cuid())
+    title       String
+    content     String?
+    contentType LessonContentType @default(TEXT)
+    videoUrl        String?
+    videoProvider   LessonVideoProvider?
+    loomUrl         String?
+    durationSeconds Int?
+    order       Int               @default(0)
+    durationMin Int?
+    moduleId    String
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 
@@ -450,15 +461,18 @@ model ProgramModule {
   @@index([programId, order])
 }
 
-model ProgramLesson {
-  id          String   @id @default(cuid())
-  moduleId    String
-  title       String
-  summary     String?
-  content     String?
-  videoUrl    String?
-  durationMin Int?
-  order       Int      @default(0)
+  model ProgramLesson {
+    id          String   @id @default(cuid())
+    moduleId    String
+    title       String
+    summary     String?
+    content         String?
+    videoUrl        String?
+    videoProvider   LessonVideoProvider?
+    loomUrl         String?
+    durationMin     Int?
+    durationSeconds Int?
+    order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 
