@@ -29,3 +29,7 @@ export function getPageCatalogLabel(slug: string) {
 export function getPagePreviewPath(slug: string, lang: AppLocale) {
   return `/${lang}/preview/${slug}`;
 }
+
+export function getPagePath(slug: string, lang: AppLocale) {
+  return slug === "home" ? `/${lang}` : `/${lang}/${slug}`;
+}

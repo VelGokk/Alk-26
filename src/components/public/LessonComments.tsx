@@ -1,4 +1,4 @@
-"use server";
+// Server component (no "use server" directive here)
 
 import Link from "next/link";
 import type { Translator } from "@/lib/i18n";

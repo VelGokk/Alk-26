@@ -7,7 +7,6 @@ import {
   generateReferralCode,
 } from "@/config/referrals";
 import { prisma } from "@/lib/prisma";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
 export type ReferralUsageSummary = {
   id: string;
@@ -76,10 +75,8 @@ export async function createReferralCode(
         createdAt: created.createdAt,
       };
     } catch (error) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === "P2002"
-      ) {
+      const code = (error as any)?.code;
+      if (code === "P2002") {
         data.code = generateReferralCode(input.createdById ?? "ADMIN");
         continue;
       }

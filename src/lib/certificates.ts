@@ -1,7 +1,6 @@
 "use server";
 
 import crypto from "crypto";
-import PDFDocument from "pdfkit";
 import { prisma } from "@/lib/prisma";
 import { getProgramProgressSegments } from "@/lib/programs";
 
@@ -92,7 +91,8 @@ export async function generateCertificatePdf(certificate: {
   user: { name?: string | null; email?: string | null };
   program: { title: string };
 }) {
-  return new Promise<Buffer>((resolve, reject) => {
+  return new Promise<Buffer>(async (resolve, reject) => {
+    const { default: PDFDocument } = await import("pdfkit");
     const doc = new PDFDocument({
       size: "A4",
       margins: { top: 64, bottom: 64, left: 64, right: 64 },
