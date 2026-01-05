@@ -5,9 +5,20 @@
     <title>ALKAYA - Offline</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
+      :root {
+        --alkaya-bg: #0f172a;
+        --alkaya-text: #f8fafc;
+        --alkaya-panel: rgba(15, 23, 42, 0.75);
+        --alkaya-border: rgba(255, 255, 255, 0.2);
+        --alkaya-shadow: rgba(15, 23, 42, 0.65);
+        --alkaya-gradient-from: #38bdf8;
+        --alkaya-gradient-to: #f472b6;
+        --alkaya-accent: #f472b6;
+      }
+
       body {
-        background: #0f172a;
-        color: #f8fafc;
+        background: var(--alkaya-bg);
+        color: var(--alkaya-text);
         font-family: "Inter", system-ui, sans-serif;
         min-height: 100vh;
         margin: 0;
@@ -17,23 +28,30 @@
         text-align: center;
         padding: 2rem;
       }
+
       .panel {
         max-width: 420px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid var(--alkaya-border);
         border-radius: 24px;
         padding: 2rem;
-        background: rgba(15, 23, 42, 0.75);
-        box-shadow: 0 25px 65px rgba(15, 23, 42, 0.65);
+        background: var(--alkaya-panel);
+        box-shadow: 0 25px 65px var(--alkaya-shadow);
       }
+
       .gradient {
         display: inline-flex;
         padding: 0.25rem 0.75rem;
         border-radius: 999px;
-        background: linear-gradient(135deg, #38bdf8, #f472b6);
+        background: linear-gradient(
+          135deg,
+          var(--alkaya-gradient-from),
+          var(--alkaya-gradient-to)
+        );
         margin-bottom: 1rem;
       }
+
       a {
-        color: #f472b6;
+        color: var(--alkaya-accent);
         text-decoration: none;
         font-weight: 600;
       }

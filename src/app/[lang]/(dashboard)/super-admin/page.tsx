@@ -2,19 +2,51 @@ import { prisma } from "@/lib/prisma";
 import { OPTIONAL_ENV } from "@/lib/env";
 import { requireRole } from "@/lib/auth/guards";
 import { Role } from "@prisma/client";
+import { getDictionary, isLocale, DEFAULT_LOCALE } from "@/lib/i18n";
+import { ReferralAdminPanel } from "@/components/super-admin/ReferralAdminPanel";
 
-export default async function SuperAdminDashboard() {
+export default async function SuperAdminDashboard({
+  params,
+}: {
+  params: { lang: string };
+}) {
   await requireRole([Role.SUPERADMIN]);
-  const [users, courses, payments, logs] = await Promise.all([
+  const resolvedLang = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE;
+  const dictionary = await getDictionary(resolvedLang);
+  const [users, courses, payments, logs, referralCodes] = await Promise.all([
     prisma.user.count(),
     prisma.course.count(),
     prisma.payment.count(),
     prisma.systemLog.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
+    prisma.referralCode.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        code: true,
+        label: true,
+        description: true,
+        rewardPoints: true,
+        isActive: true,
+        createdAt: true,
+        _count: { select: { usages: true } },
+      },
+    }),
   ]);
 
   const integrations = OPTIONAL_ENV.map((key) => ({
     key,
     enabled: Boolean(process.env[key]),
+  }));
+
+  const referralCodeRows = referralCodes.map((entry) => ({
+    id: entry.id,
+    code: entry.code,
+    label: entry.label,
+    description: entry.description,
+    rewardPoints: entry.rewardPoints,
+    isActive: entry.isActive,
+    createdAt: entry.createdAt.toISOString(),
+    usageCount: entry._count.usages,
   }));
 
   return (
@@ -86,6 +118,12 @@ export default async function SuperAdminDashboard() {
           </div>
         </div>
       </div>
+
+      <ReferralAdminPanel
+        dictionary={dictionary}
+        initialCodes={referralCodeRows}
+        locale={resolvedLang}
+      />
     </div>
   );
 }

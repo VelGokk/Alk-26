@@ -41,7 +41,11 @@ export function InstallToast() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 max-w-xs rounded-2xl border border-white/20 bg-gradient-to-br from-slate-900/90 to-slate-900/60 p-4 text-sm text-white shadow-2xl shadow-black/50">
+    <div
+      role="status"
+      aria-live="polite"
+      className="fixed bottom-6 right-6 z-50 max-w-xs rounded-2xl border border-white/20 bg-gradient-to-br from-slate-900/90 to-slate-900/60 p-4 text-sm text-white shadow-2xl shadow-black/50"
+    >
       <p className="text-xs uppercase tracking-[0.3em] text-slate-400">
         ALKAYA App
       </p>
@@ -52,14 +56,16 @@ export function InstallToast() {
         <button
           type="button"
           onClick={handleInstall}
-          className="rounded-full bg-emerald-400 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-900"
+          className="rounded-full bg-emerald-400 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300"
+          aria-label="Instalar la aplicación"
         >
           Instalar
         </button>
         <button
           type="button"
           onClick={() => setVisible(false)}
-          className="text-xs uppercase tracking-[0.3em] text-slate-400"
+          className="text-xs uppercase tracking-[0.3em] text-slate-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          aria-label="Cerrar sugerencia de instalación"
         >
           No, gracias
         </button>

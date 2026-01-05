@@ -70,16 +70,32 @@ export async function updateBranding(formData: FormData) {
   const primaryColor = String(formData.get("primaryColor") ?? "");
   const secondaryColor = String(formData.get("secondaryColor") ?? "");
   const accentColor = String(formData.get("accentColor") ?? "");
+  const panelRadius = Number(formData.get("panelRadius") ?? 24);
+  const panelBlur = Number(formData.get("panelBlur") ?? 16);
 
   const existing = await prisma.brandingSetting.findFirst();
   if (existing) {
     await prisma.brandingSetting.update({
       where: { id: existing.id },
-      data: { logoUrl, primaryColor, secondaryColor, accentColor },
+      data: {
+        logoUrl,
+        primaryColor,
+        secondaryColor,
+        accentColor,
+        panelRadius: Number.isNaN(panelRadius) ? 24 : panelRadius,
+        panelBlur: Number.isNaN(panelBlur) ? 16 : panelBlur,
+      },
     });
   } else {
     await prisma.brandingSetting.create({
-      data: { logoUrl, primaryColor, secondaryColor, accentColor },
+      data: {
+        logoUrl,
+        primaryColor,
+        secondaryColor,
+        accentColor,
+        panelRadius: Number.isNaN(panelRadius) ? 24 : panelRadius,
+        panelBlur: Number.isNaN(panelBlur) ? 16 : panelBlur,
+      },
     });
   }
 

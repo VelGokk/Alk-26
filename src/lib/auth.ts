@@ -4,11 +4,20 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { compare } from "bcryptjs";
-import type { Role } from "@prisma/client";
+import { LogLevel, type Role } from "@prisma/client";
 import { prisma } from "./prisma";
 import { logEvent } from "./logger";
 import { ROLE_HOME } from "@/config/roles";
 import { DEFAULT_LOCALE, isLocale } from "@/config/i18n";
+import { auditEvent } from "./audit";
+import {
+  LearningProfileId,
+  LEARNING_PROFILE_DEFAULT,
+} from "@/config/learning-profile";
+import {
+  LearningPathId,
+  LEARNING_PATH_DEFAULT,
+} from "@/config/learning-paths";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -75,6 +84,39 @@ export const authOptions: NextAuthOptions = {
         ]
       : []),
   ],
+  events: {
+    async signIn({ user, account, isNewUser }) {
+      await auditEvent({
+        action: "auth.signIn",
+        userId: user?.id,
+        source: account?.provider,
+        metadata: {
+          provider: account?.provider,
+          isNewUser,
+        },
+      });
+    },
+    async signOut({ session }) {
+      await auditEvent({
+        action: "auth.signOut",
+        userId: session?.user?.id,
+        metadata: {
+          email: session?.user?.email,
+        },
+      });
+    },
+    async error({ error }) {
+      await auditEvent({
+        action: "auth.error",
+        status: "failure",
+        level: LogLevel.ERROR,
+        metadata: {
+          message: error?.message,
+          stack: error?.stack,
+        },
+      });
+    },
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -84,6 +126,8 @@ export const authOptions: NextAuthOptions = {
           isActive?: boolean;
           pendingLegalUpdate?: boolean;
           signedLegalDocumentId?: string | null;
+          learningProfile?: LearningProfileId;
+          learningPath?: LearningPathId;
         };
         token.role = typedUser.role ?? "USER";
         token.userId = typedUser.id;
@@ -99,6 +143,10 @@ export const authOptions: NextAuthOptions = {
             : [typedUser.role ?? (Role.USER as Role)];
         token.pendingLegalUpdate = Boolean(typedUser.pendingLegalUpdate);
         token.signedLegalDocumentId = typedUser.signedLegalDocumentId ?? null;
+        token.learningProfile =
+          typedUser.learningProfile ?? LEARNING_PROFILE_DEFAULT;
+        token.learningPath = typedUser.learningPath ?? LEARNING_PATH_DEFAULT;
+        token.referralPoints = typedUser.referralPoints ?? 0;
       }
       if (!token.roles?.length) {
         token.roles = [(token.role as Role) ?? Role.USER];
@@ -106,10 +154,13 @@ export const authOptions: NextAuthOptions = {
       if (!user && token.userId) {
         const persistedUser = await prisma.user.findUnique({
           where: { id: token.userId as string },
-          select: {
-            pendingLegalUpdate: true,
-            signedLegalDocumentId: true,
-          },
+        select: {
+          pendingLegalUpdate: true,
+          signedLegalDocumentId: true,
+          learningProfile: true,
+          learningPath: true,
+          referralPoints: true,
+        },
         });
         if (persistedUser) {
           token.pendingLegalUpdate = Boolean(
@@ -117,6 +168,11 @@ export const authOptions: NextAuthOptions = {
           );
           token.signedLegalDocumentId =
             persistedUser.signedLegalDocumentId ?? null;
+        token.learningProfile =
+          persistedUser.learningProfile ?? LEARNING_PROFILE_DEFAULT;
+        token.learningPath =
+          persistedUser.learningPath ?? LEARNING_PATH_DEFAULT;
+        token.referralPoints = persistedUser.referralPoints ?? 0;
         }
       }
       return token;
@@ -132,6 +188,11 @@ export const authOptions: NextAuthOptions = {
         session.user.signedLegalDocumentId =
           token.signedLegalDocumentId as string | undefined;
         session.user.isActive = Boolean(token.isActive);
+        session.user.learningProfile =
+          (token.learningProfile as LearningProfileId) ?? LEARNING_PROFILE_DEFAULT;
+        session.user.learningPath =
+          (token.learningPath as LearningPathId) ?? LEARNING_PATH_DEFAULT;
+        session.user.referralPoints = (token.referralPoints as number) ?? 0;
       }
       return session;
     },

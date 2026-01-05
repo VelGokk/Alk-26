@@ -5,6 +5,8 @@ export const DEFAULT_BRANDING = {
   primaryColor: "#0A2A43",
   secondaryColor: "#F5F7FA",
   accentColor: "#0D6EFD",
+  panelRadius: 24,
+  panelBlur: 16,
 };
 
 export const DEFAULT_SETTINGS = {

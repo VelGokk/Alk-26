@@ -84,6 +84,20 @@ enum LogLevel {
   ERROR
 }
 
+enum LearningProfileId {
+  BALANCED
+  DISCOVERER
+  PRACTITIONER
+  SUSTAINER
+}
+
+enum LearningPathId {
+  FOUNDATION
+  ACTION
+  SUSTAINMENT
+  EXPEDITION
+}
+
 enum ModerationTargetType {
   USER
   COMMENT
@@ -119,21 +133,37 @@ enum NotificationType {
   EVENT
 }
 
+enum ShareLevel {
+  PRIVATE
+  TEAM
+  PUBLIC
+}
+
+enum InsightStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
-  id                 String    @id @default(cuid())
+  id                 String            @id @default(cuid())
   name               String?
-  email              String    @unique
+  email              String            @unique
   emailVerified      DateTime?
   image              String?
   passwordHash       String?
-  role               Role      @default(USER)
-  isActive           Boolean   @default(true)
-  locale             String    @default("es-ar")
+  role               Role              @default(USER)
+  isActive           Boolean           @default(true)
+  locale             String            @default("es-ar")
+  learningProfile    LearningProfileId @default(BALANCED)
+  learningPath       LearningPathId?
+  organizationId     String?
+  organization       Organization?     @relation(fields: [organizationId], references: [id])
   lastLoginAt        DateTime?
-  pendingLegalUpdate Boolean   @default(false)
+  pendingLegalUpdate Boolean           @default(false)
   suspendedUntil     DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
 
   accounts                 Account[]
   sessions                 Session[]
@@ -163,11 +193,54 @@ model User {
   signedLegalDocument      LegalDocument?           @relation("SignedDocument", fields: [signedLegalDocumentId], references: [id])
   programEnrollments       ProgramEnrollment[]
   ontologicalLogs          OntologicalLog[]
+  insightPosts             InsightPost[]
   notifications            Notification[]
   notificationPreferences  NotificationPreference[]
+  referralPoints           Int                      @default(0)
+  usedReferralCodeId       String?
+  usedReferralCode         ReferralCode?            @relation("UsedReferralCode", fields: [usedReferralCodeId], references: [id])
+  referralCodes            ReferralCode[]           @relation("CreatedCodes")
+  referralUsages           ReferralUsage[]          @relation("ReferredUsages")
+  learningPathAssignments  LearningPathAssignment[]
+  onboardingSession        OnboardingSession?
+  eventReminders           EventReminder[]
 
   @@index([role])
   @@index([isActive])
+  @@index([learningPath])
+  @@index([organizationId])
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  locale    String   @default("es-ar")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users        User[]
+  tenantConfig TenantConfig?
+  insightPosts InsightPost[]
+}
+
+model TenantConfig {
+  id                  String   @id @default(cuid())
+  organizationId      String   @unique
+  slug                String   @unique
+  tenantName          String
+  logoUrl             String?
+  primaryColor        String?
+  secondaryColor      String?
+  accentColor         String?
+  cursorColor         String?
+  ctaGlowColor        String?
+  panelRadiusSpecific Int?
+  panelBlurSpecific   Int?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 }
 
 model Account {
@@ -354,9 +427,11 @@ model Program {
 
   modules         ProgramModule[]
   enrollments     ProgramEnrollment[]
-  certificates     Certificate[]
+  certificates    Certificate[]
   tagRelations    ProgramTagRelation[]
   ontologicalLogs OntologicalLog[]
+
+  events Event[]
 }
 
 model ProgramModule {
@@ -407,6 +482,36 @@ model ProgramResource {
   comments Comment[]
 
   @@index([lessonId])
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  programId   String
+  title       String
+  description String?
+  scheduledAt DateTime
+  link        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  program   Program         @relation(fields: [programId], references: [id], onDelete: Cascade)
+  reminders EventReminder[]
+
+  @@index([scheduledAt])
+  @@index([programId])
+}
+
+model EventReminder {
+  id      String   @id @default(cuid())
+  eventId String
+  userId  String
+  sentAt  DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([sentAt])
 }
 
 model ProgramEnrollment {
@@ -463,19 +568,41 @@ model ProgramTagRelation {
 }
 
 model OntologicalLog {
-  id        String   @id @default(cuid())
-  userId    String
-  programId String
-  content   String
-  isPrivate Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String     @id @default(cuid())
+  userId     String
+  programId  String
+  content    String
+  isPrivate  Boolean    @default(false)
+  shareLevel ShareLevel @default(PRIVATE)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program      Program       @relation(fields: [programId], references: [id], onDelete: Cascade)
+  insightPosts InsightPost[]
 
   @@unique([userId, programId])
   @@index([programId])
+}
+
+model InsightPost {
+  id               String        @id @default(cuid())
+  organizationId   String
+  ontologicalLogId String?
+  createdById      String?
+  content          String
+  isAnonymous      Boolean       @default(true)
+  shareLevel       ShareLevel    @default(PRIVATE)
+  status           InsightStatus @default(PENDING)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  ontologicalLog OntologicalLog? @relation(fields: [ontologicalLogId], references: [id])
+  author         User?           @relation(fields: [createdById], references: [id])
+
+  @@index([organizationId])
+  @@index([status])
 }
 
 model CourseReview {
@@ -503,10 +630,10 @@ model Enrollment {
   completedAt     DateTime?
   paymentId       String?
 
-  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course   Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  payment  Payment?         @relation(fields: [paymentId], references: [id])
-  progress LessonProgress[]
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  payment     Payment?         @relation(fields: [paymentId], references: [id])
+  progress    LessonProgress[]
   certificate Certificate?
 
   @@unique([userId, courseId])
@@ -584,15 +711,15 @@ model PaymentWebhookEvent {
 }
 
 model Certificate {
-  id                String      @id @default(cuid())
-  enrollmentId      String      @unique
+  id                String   @id @default(cuid())
+  enrollmentId      String   @unique
   userId            String
   programId         String
   certificateNumber String
-  issuedAt          DateTime    @default(now())
+  issuedAt          DateTime @default(now())
   metadata          Json?
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -796,6 +923,8 @@ model BrandingSetting {
   primaryColor   String   @default("#0B0D0E")
   secondaryColor String   @default("#F5F1E8")
   accentColor    String   @default("#8C6C3F")
+  panelRadius    Int      @default(24)
+  panelBlur      Int      @default(16)
   updatedAt      DateTime @updatedAt
   createdAt      DateTime @default(now())
 }
@@ -840,6 +969,37 @@ model Section {
   @@index([pageId, order])
 }
 
+model PageDraft {
+  id           String   @id @default(cuid())
+  slug         String
+  lang         String
+  seoTitle     String?
+  seoDesc      String?
+  previewToken String   @unique @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sections DraftSection[]
+
+  @@unique([slug, lang])
+  @@index([slug, lang])
+}
+
+model DraftSection {
+  id          String   @id @default(cuid())
+  pageDraftId String
+  type        String
+  order       Int      @default(0)
+  enabled     Boolean  @default(true)
+  data        Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  pageDraft PageDraft @relation(fields: [pageDraftId], references: [id], onDelete: Cascade)
+
+  @@index([pageDraftId, order])
+}
+
 model LiveSession {
   id              String    @id @default(cuid())
   title           String
@@ -853,6 +1013,41 @@ model LiveSession {
   updatedAt       DateTime  @updatedAt
 
   createdBy User? @relation("LiveSessionCreator", fields: [createdById], references: [id])
+}
+
+model ReferralCode {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  label        String?
+  description  String?
+  rewardPoints Int      @default(100)
+  isActive     Boolean  @default(true)
+  createdById  String?
+  createdAt    DateTime @default(now())
+
+  creator     User?           @relation("CreatedCodes", fields: [createdById], references: [id])
+  usages      ReferralUsage[]
+  usedByUsers User[]          @relation("UsedReferralCode")
+
+  @@index([createdById])
+}
+
+model ReferralUsage {
+  id                  String   @id @default(cuid())
+  referralCodeId      String
+  referredUserId      String?
+  referredEmail       String
+  refererRewardPoints Int
+  refereeRewardPoints Int
+  rewardedReferer     Boolean  @default(false)
+  rewardedReferee     Boolean  @default(false)
+  createdAt           DateTime @default(now())
+
+  referralCode ReferralCode @relation(fields: [referralCodeId], references: [id], onDelete: Cascade)
+  referredUser User?        @relation("ReferredUsages", fields: [referredUserId], references: [id])
+
+  @@index([referralCodeId])
+  @@index([referredUserId])
 }
 
 model LegalDocument {
@@ -907,4 +1102,32 @@ model RolePermission {
 
   @@unique([role, permission])
   @@index([role])
+}
+
+model LearningPathAssignment {
+  id        String         @id @default(cuid())
+  userId    String
+  path      LearningPathId
+  isActive  Boolean        @default(true)
+  createdAt DateTime       @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model OnboardingSession {
+  userId          String             @id
+  step            Int                @default(1)
+  answers         Json               @default("{}")
+  learningProfile LearningProfileId?
+  learningPath    LearningPathId?
+  isComplete      Boolean            @default(false)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([learningProfile])
+  @@index([learningPath])
 }

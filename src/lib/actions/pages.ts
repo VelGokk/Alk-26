@@ -4,12 +4,16 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth/guards";
 import { Role } from "@prisma/client";
-import { getPagePath } from "@/lib/pages";
+import { getPagePath, getPagePreviewPath } from "@/config/pages";
 import {
   resolveSectionType,
   sanitizeSectionData,
 } from "@/config/sections";
 import { resolvePageSlug } from "@/config/pages";
+import {
+  ensurePageDraftRecord,
+  publishDraftContent,
+} from "@/lib/pageDrafts";
 
 function parseJsonPayload(value: FormDataEntryValue | null) {
   const raw = String(value ?? "").trim();
@@ -28,6 +32,7 @@ function parseOrder(value: FormDataEntryValue | null) {
 
 function refreshPaths(slug: string, lang: string) {
   revalidatePath(getPagePath(slug, lang));
+  revalidatePath(getPagePreviewPath(slug, lang));
   revalidatePath(`/${lang}/super-admin/pages/${slug}`);
 }
 
@@ -47,6 +52,8 @@ export async function createPage(formData: FormData) {
     create: { slug, lang },
   });
 
+  await ensurePageDraftRecord(slug, lang);
+
   refreshPaths(slug, lang);
 }
 
@@ -58,12 +65,17 @@ export async function upsertPageMeta(formData: FormData) {
 
   const seoTitle = String(formData.get("seoTitle") ?? "").trim();
   const seoDesc = String(formData.get("seoDesc") ?? "").trim();
+  const action = String(formData.get("action") ?? "save").toLowerCase();
+  const { draft } = await ensurePageDraftRecord(slug, lang);
 
-  await prisma.page.upsert({
-    where: { slug_lang: { slug, lang } },
-    update: { seoTitle: seoTitle || null, seoDesc: seoDesc || null },
-    create: { slug, lang, seoTitle: seoTitle || null, seoDesc: seoDesc || null },
+  await prisma.pageDraft.update({
+    where: { id: draft.id },
+    data: { seoTitle: seoTitle || null, seoDesc: seoDesc || null },
   });
+
+  if (action === "publish") {
+    await publishDraftContent(slug, lang);
+  }
 
   refreshPaths(slug, lang);
 }
@@ -75,15 +87,21 @@ export async function updateSection(formData: FormData) {
   const lang = String(formData.get("lang") ?? "");
   if (!sectionId || !slug || !lang) return;
 
+  await ensurePageDraftRecord(slug, lang);
   const type = resolveSectionType(String(formData.get("type") ?? "").trim() || undefined);
   const order = parseOrder(formData.get("order"));
   const enabled = Boolean(formData.get("enabled"));
   const data = sanitizeSectionData(type, parseJsonPayload(formData.get("data")));
+  const action = String(formData.get("action") ?? "save").toLowerCase();
 
-  await prisma.section.update({
+  await prisma.draftSection.update({
     where: { id: sectionId },
     data: { type, order, enabled, data },
   });
+
+  if (action === "publish") {
+    await publishDraftContent(slug, lang);
+  }
 
   refreshPaths(slug, lang);
 }
@@ -104,10 +122,11 @@ export async function addSection(formData: FormData) {
     update: {},
     create: { slug, lang },
   });
+  const { draft } = await ensurePageDraftRecord(slug, lang);
 
-  await prisma.section.create({
+  await prisma.draftSection.create({
     data: {
-      pageId: page.id,
+      pageDraftId: draft.id,
       type,
       order,
       enabled,
@@ -125,22 +144,22 @@ export async function duplicateSection(formData: FormData) {
   const lang = String(formData.get("lang") ?? "");
   if (!sectionId || !slug || !lang) return;
 
-  const section = await prisma.section.findUnique({
+  const section = await prisma.draftSection.findUnique({
     where: { id: sectionId },
-    select: { id: true, order: true, pageId: true, type: true, enabled: true, data: true },
+    select: { id: true, order: true, pageDraftId: true, type: true, enabled: true, data: true },
   });
   if (!section) return;
 
   const nextOrder = section.order + 1;
 
   await prisma.$transaction([
-    prisma.section.updateMany({
-      where: { pageId: section.pageId, order: { gte: nextOrder } },
+    prisma.draftSection.updateMany({
+      where: { pageDraftId: section.pageDraftId, order: { gte: nextOrder } },
       data: { order: { increment: 1 } },
     }),
-    prisma.section.create({
+    prisma.draftSection.create({
       data: {
-        pageId: section.pageId,
+        pageDraftId: section.pageDraftId,
         type: section.type,
         enabled: section.enabled,
         order: nextOrder,
@@ -160,26 +179,26 @@ export async function reorderSection(formData: FormData) {
   const direction = String(formData.get("direction") ?? "").toLowerCase();
   if (!sectionId || !slug || !lang) return;
 
-  const section = await prisma.section.findUnique({
+  const section = await prisma.draftSection.findUnique({
     where: { id: sectionId },
-    select: { id: true, order: true, pageId: true },
+    select: { id: true, order: true, pageDraftId: true },
   });
   if (!section || (direction !== "up" && direction !== "down")) return;
 
   const comparator = direction === "up" ? { lt: section.order } : { gt: section.order };
   const orderDirection = direction === "up" ? "desc" : "asc";
-  const swap = await prisma.section.findFirst({
-    where: { pageId: section.pageId, order: comparator },
+  const swap = await prisma.draftSection.findFirst({
+    where: { pageDraftId: section.pageDraftId, order: comparator },
     orderBy: { order: orderDirection },
   });
   if (!swap) return;
 
   await prisma.$transaction([
-    prisma.section.update({
+    prisma.draftSection.update({
       where: { id: section.id },
       data: { order: swap.order },
     }),
-    prisma.section.update({
+    prisma.draftSection.update({
       where: { id: swap.id },
       data: { order: section.order },
     }),
@@ -196,11 +215,15 @@ export async function setPagePublication(formData: FormData) {
   const action = String(formData.get("action") ?? "").toLowerCase();
   const publish = action === "publish";
 
-  await prisma.page.upsert({
-    where: { slug_lang: { slug, lang } },
-    update: { isPublished: publish },
-    create: { slug, lang, isPublished: publish },
-  });
+  if (publish) {
+    await publishDraftContent(slug, lang);
+  } else {
+    await prisma.page.upsert({
+      where: { slug_lang: { slug, lang } },
+      update: { isPublished: false },
+      create: { slug, lang, isPublished: false },
+    });
+  }
 
   refreshPaths(slug, lang);
 }

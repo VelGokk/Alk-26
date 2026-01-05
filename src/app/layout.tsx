@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { fontVariables } from "@/config/fonts";
+import type { ReactNode, CSSProperties } from "react";
 import { Providers } from "./providers";
 import "./globals.css";
 import { cssVariables } from "@/styles/tokens";
 import { SEO_DEFAULTS } from "@/config/seo";
 import { SUPPORTED_LOCALES } from "@/config/i18n";
+import { getBranding } from "@/lib/settings";
 
 const baseUrl = SEO_DEFAULTS.metadataBase.replace(/\/$/, "");
 const ogImageUrl = `${baseUrl}${SEO_DEFAULTS.openGraphImage}`;
@@ -82,12 +83,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
-  const rootStyle = cssVariables as React.CSSProperties;
+  const branding = await getBranding();
+  const dynamicVars: Record<string, string> = {
+    "--brand-primary": branding.primaryColor,
+    "--brand-secondary": branding.secondaryColor,
+    "--brand-accent": branding.accentColor,
+    "--panel-radius": `${branding.panelRadius ?? 24}px`,
+    "--panel-blur": `${branding.panelBlur ?? 16}px`,
+  };
+  const rootStyle = {
+    ...cssVariables,
+    ...dynamicVars,
+  } satisfies CSSProperties;
 
   return (
     <html lang="es-AR" className={fontVariables} style={rootStyle}>

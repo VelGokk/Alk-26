@@ -1,4 +1,4 @@
-{
+﻿{
   "brand": "ALKAYA",
   "nav": {
     "home": "Home",
@@ -123,6 +123,22 @@
     "studentRoot": "Student",
     "studentCourses": "My courses",
     "certificates": "Certificates",
+    "learningPaths": "Paths",
+    "learningPathsTitle": "Learning paths",
+    "learningPathsSubtitle": "Follow the phases and unlock new milestones",
+    "learningPathsEmpty": "Enroll in a program to unlock tailored paths.",
+    "learningPathStatusLocked": "Locked",
+    "learningPathStatusUnlocked": "Unlocked",
+    "learningPathStatusComplete": "Complete",
+    "learningPathFoundation": "Observer path",
+    "learningPathFoundationDescription": "Return to observation-based practices and map your system.",
+    "learningPathAction": "Builder",
+    "learningPathActionDescription": "Design interventions that move you through order and action.",
+    "learningPathSustainer": "Sustainer",
+    "learningPathSustainerDescription": "Activate rituals and practices that keep new habits alive.",
+    "learningPathExpedition": "Full expedition",
+    "learningPathExpeditionDescription": "Align every phase to complete a transformation cycle.",
+    "learningPathsProgramLabel": "Program",
     "certificateListTitle": "Your certificates",
     "certificateListSubtitle": "Download the official PDF for every program you completed.",
     "certificateListEmpty": "Finish a program to unlock your first certificate.",
@@ -139,6 +155,88 @@
     "certificateDetailMetaHint": "Verified metadata is stored with the certificate.",
     "certificateSegmentsEmpty": "This certificate has no recorded phases yet.",
     "notifications": "Notifications",
+    "recommendationsTitle": "Recommendations",
+    "recommendationsSubtitle": "Personalized guidance for your learning path",
+    "recommendationProgressTitle": "Progress in your programs",
+    "recommendationProgressDescription":
+      "Return to your active courses, finish lessons and unlock certificates.",
+    "recommendationCertificatesTitle": "Your certificates",
+    "recommendationCertificatesDescription":
+      "Download or share the official versions for every completed program.",
+    "recommendationProgramsTitle": "Explore programs",
+    "recommendationProgramsDescription":
+      "Discover the 2026 premium pathways designed by Alkaya.",
+    "recommendationResourcesTitle": "Featured resources",
+    "recommendationResourcesDescription":
+      "Articles, podcasts and tools that help you sustain the practice.",
+    "recommendationNotificationsTitle": "Stay in the loop",
+    "recommendationNotificationsDescription":
+      "Catch up with reviews, events, and invites that keep you moving.",
+    "recommendationWhyObservation":
+      "Observation sits at {percent}. Keep logging insights to stay grounded in the system.",
+    "recommendationWhyOrder":
+      "Order & action are at {percent}. Schedule deliberate interventions to keep unlock the next phase.",
+    "recommendationWhySustainment":
+      "Sustainment sits at {percent}. Reinforce rituals that make the new behaviors stick.",
+    "eventsTitle": "Events",
+    "eventsSubtitle": "Join the upcoming live sessions for your programs",
+    "eventsEmpty": "No events scheduled yet for your programs.",
+    "eventsProgramLabel": "Program",
+    "eventsDateLabel": "Date & time",
+    "eventsLinkLabel": "Join event",
+    "eventsReminderLabel": "Reminder 1h before",
+    "searchPlaceholder": "Search resources, users, pages...",
+    "searchHelp": "Press âŒ˜/Ctrl + K to open search",
+    "searchNoResults": "No matches yet.",
+    "searchLoading": "Searching...",
+    "searchTypeResources": "Resources",
+    "searchTypeUsers": "Users",
+    "searchTypePages": "Pages",
+    "searchSwitchRole": "Change role",
+    "searchSwitchRoleHint": "Switch dashboards without leaving search.",
+    "searchError": "Unable to run the search right now.",
+    "badgesTitle": "Alkaya Badges",
+    "badgesSubtitle": "Celebrate habits and phases that keep your practice alive.",
+    "badgesHabitsTitle": "Habits",
+    "badgesPhasesTitle": "Phases",
+    "badgesLevelLabel": "Level",
+    "badgesProgressLabel": "Progress",
+    "badgesOptOut": "Hide badges",
+    "badgesOptIn": "Show badges",
+    "badgesOptedOut": "Badges hidden. Re-enable this space anytime to see your streaks.",
+    "badgesPhasePresence": "Presence",
+    "badgesPhaseStructure": "Structure",
+    "badgesPhaseAction": "Action",
+    "badgesPhaseSustain": "Sustainment",
+    "badgesHabitPresence": "Observation Presence",
+    "badgesHabitPresenceDescription":
+      "Track your noticing and re-centering rituals.",
+    "badgesHabitMomentum": "Momentum",
+    "badgesHabitMomentumDescription":
+      "Measure how steady your action cycles feel.",
+    "badgesHabitSustainment": "Sustainment",
+    "badgesHabitSustainmentDescription":
+      "Honor the rituals that keep the change alive.",
+    "onboardingTitle": "Onboarding",
+    "onboardingSubtitle": "Define your profile and path",
+    "onboardingPageHelper":
+      "A guided chat to assign your learning profile and the path you will follow next.",
+    "onboardingGreeting":
+      "Hi! Let's build your learning profile and pick a path.",
+    "onboardingProfilePrompt":
+      "Which mindset best matches your current intention?",
+    "onboardingPathPrompt": "Which path would you like to explore first?",
+    "onboardingCompleteTitle": "Path ready",
+    "onboardingCompleteMessage":
+      "Profile {profile} and path {path} are set. Head back to the dashboard to continue.",
+    "onboardingCompleteHint":
+      "You can revisit this space anytime to refresh your choices.",
+    "onboardingError": "We couldn't save that. Please try again.",
+    "onboardingSaving": "Saving...",
+    "onboardingPrompt": "Need to clarify your focus? Let's build your profile.",
+    "onboardingCTA": "Start onboarding",
+    "recommendationActionView": "View",
+    "recommendationActionExplore": "Explore",
     "notificationsTitle": "Inbox",
     "notificationsEmpty": "No notifications yet.",
     "notificationsPreferencesTitle": "Notification preferences",
@@ -155,6 +253,9 @@
     "notificationTypeCertificateReady": "Certificate ready",
     "notificationTypeEvent": "Event",
     "payments": "Payments",
+    "activeCourses": "Active courses",
+    "learningProfileLabel": "Learning profile",
+    "learningProfileSubtitle": "What you prioritize right now",
     "paymentsTitle": "Recent movements",
     "paymentsEmpty": "No payments recorded yet.",
     "paymentsCreated": "Created",
@@ -172,7 +273,41 @@
     "paymentsPreference": "Preference",
     "paymentsCourses": "Courses",
     "paymentsWebhook": "Last webhook",
-    "paymentsWebhookMissing": "No events"
+    "paymentsWebhookMissing": "No events",
+    "referralLabel": "Referral program",
+    "referralTitle": "Invite allies",
+    "referralSubtitle":
+      "Share your code and earn points when someone joins ALKAYA.",
+    "referralCodeLabel": "Code",
+    "referralUsageCountLabel": "Times used",
+    "referralLinkLabel": "Invite link",
+    "referralLinkAction": "Copy link",
+    "referralCopied": "Copied",
+    "referralPointsLabel": "Accumulated points",
+    "referralRewardLabel": "Referrer bonus",
+    "referralRefereeLabel": "Referee bonus",
+    "referralRecentTitle": "Recent activity",
+    "referralUsageEmpty": "You haven't referred anyone yet.",
+    "referralAdminTitle": "Referral codes",
+    "referralAdminSubtitle":
+      "Design campaigns and track how each invitation performs.",
+    "referralAdminFormHint":
+      "Create codes with custom text, bonus, and description to share.",
+    "referralAdminFormLabel": "Label",
+    "referralAdminFormDescription": "Description",
+    "referralAdminFormReward": "Points per referral",
+    "referralAdminFormCode": "Code (optional)",
+    "referralAdminFormActive": "Active",
+    "referralAdminFormSubmit": "Save code",
+    "referralAdminTableCode": "Code",
+    "referralAdminTableLabel": "Label",
+    "referralAdminTableReward": "Points",
+    "referralAdminTableUsage": "Usages",
+    "referralAdminTableCreated": "Created",
+    "referralAdminStatusActive": "Active",
+    "referralAdminStatusInactive": "Inactive",
+    "referralAdminShareLink": "Open link",
+    "referralAdminEmpty": "No referral codes yet."
   },
   "footer": {
     "description": "Consulting firm for ontological coaching for leaders, teams and organizations who need to sustain change.",
@@ -204,6 +339,12 @@
     "submitLabel": "Start a conversation",
     "successTitle": "Message sent",
     "successMessage": "Thanks for writing us. We'll answer shortly."
+  },
+  "learningProfile": {
+    "balanced": "Balanced",
+    "discoverer": "Discoverer",
+    "practitioner": "Practitioner",
+    "sustainer": "Sustainer"
   },
   "auth": {
     "tabs": {
@@ -289,3 +430,5 @@
     "programLessonCommentReportButton": "Report comment"
   }
 }
+
+

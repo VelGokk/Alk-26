@@ -79,11 +79,17 @@ export default function AuthForm({
     const name = String(form.get("name") ?? "");
     const email = String(form.get("email") ?? "");
     const password = String(form.get("password") ?? "");
+    const rawReferral = String(searchParams.get("ref") ?? "").trim();
 
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        referralCode: rawReferral || undefined,
+      }),
     });
     const data = await res.json();
     if (!res.ok) {

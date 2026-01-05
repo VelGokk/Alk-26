@@ -1,5 +1,6 @@
-import type { DefaultSession, DefaultUser } from "next-auth";
 import type { Role } from "@prisma/client";
+import type { LearningProfileId } from "@/config/learning-profile";
+import type { LearningPathId } from "@/config/learning-paths";
 
 declare module "next-auth" {
   interface Session {
@@ -10,6 +11,9 @@ declare module "next-auth" {
       isActive?: boolean;
       pendingLegalUpdate?: boolean;
       signedLegalDocumentId?: string | null;
+      learningProfile?: LearningProfileId;
+      learningPath?: LearningPathId;
+      referralPoints?: number;
     } & DefaultSession["user"];
   }
 
@@ -26,5 +30,8 @@ declare module "next-auth/jwt" {
     isActive?: boolean;
     pendingLegalUpdate?: boolean;
     signedLegalDocumentId?: string | null;
+    learningProfile?: LearningProfileId;
+    learningPath?: LearningPathId;
+    referralPoints?: number;
   }
 }

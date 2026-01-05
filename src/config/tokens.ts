@@ -37,6 +37,11 @@ export const cssVariables = {
   "--color-ember": tokens.cta,
   "--surface": tokens.surface,
   "--surface-muted": tokens.surfaceMuted,
+  "--brand-primary": tokens.brand[900],
+  "--brand-secondary": tokens.brand[600],
+  "--brand-accent": tokens.cta,
+  "--panel-radius": "24px",
+  "--panel-blur": "16px",
 } satisfies Record<`--${string}`, string>;
 
 export type CssVariables = typeof cssVariables;

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run check-env && next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -12,7 +12,8 @@
     "prisma:migrate": "prisma migrate dev",
     "seed": "prisma db seed",
     "qa:smoke": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/qa-smoke.ps1",
-    "env:check": "node scripts/env-check.mjs",
+    "check-env": "node scripts/check-env.mjs",
+    "env:check": "npm run check-env",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -34,7 +35,8 @@
     "react-dom": "19.2.3",
     "resend": "^4.0.0",
     "tailwind-merge": "^2.5.5",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "framer-motion": "^10.12.16"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

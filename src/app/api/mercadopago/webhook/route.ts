@@ -6,6 +6,7 @@ import { PaymentStatus } from "@prisma/client";
 import { logEvent } from "@/lib/logger";
 import { deliverEmail } from "@/lib/email";
 import { paymentReceiptTemplate } from "@/emails/templates/transactional";
+import { auditEvent } from "@/lib/audit";
 
 type WebhookPayload = Record<string, unknown>;
 
@@ -175,6 +176,22 @@ export async function POST(request: Request) {
     action: "payment.webhook",
     message: `Webhook ${paymentId} -> ${status}`,
     userId: payment.userId,
+  });
+
+  await auditEvent({
+    action: "payment.webhook",
+    userId: payment.userId,
+    resourceType: "Payment",
+    resourceId: payment.id,
+    status: status,
+    source: "mercadopago",
+    ip: request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? undefined,
+    userAgent: request.headers.get("user-agent") ?? undefined,
+    metadata: {
+      paymentId,
+      idempotencyKey,
+      providerStatus: paymentInfo.status,
+    },
   });
 
   return NextResponse.json({ status: "ok" });

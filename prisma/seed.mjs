@@ -1082,6 +1082,33 @@ async function seedContentReviews() {
 async function main() {
   const passwordHash = await hash("Alkaya123!", 10);
 
+  const organization = await prisma.organization.upsert({
+    where: { slug: "alkaya" },
+    update: { name: "ALKAYA" },
+    create: {
+      name: "ALKAYA",
+      slug: "alkaya",
+      locale: "es-ar",
+    },
+  });
+
+  await prisma.tenantConfig.upsert({
+    where: { organizationId: organization.id },
+    update: {},
+    create: {
+      organizationId: organization.id,
+      slug: "alkaya-main",
+      tenantName: "ALKAYA Collective",
+      primaryColor: "#0A2A43",
+      secondaryColor: "#F5F7FA",
+      accentColor: "#0D6EFD",
+      cursorColor: "#8E2EE4",
+      ctaGlowColor: "#2FBF71",
+      panelRadiusSpecific: 32,
+      panelBlurSpecific: 24,
+    },
+  });
+
   const users = [
     {
       email: "superadmin@alkaya.ai",
@@ -1128,11 +1155,13 @@ async function main() {
         role: user.role,
         passwordHash,
         isActive: true,
+        organizationId: organization.id,
       },
       create: {
         ...user,
         passwordHash,
         isActive: true,
+        organizationId: organization.id,
       },
     });
   }
@@ -1259,6 +1288,30 @@ async function main() {
   await seedPrograms();
   await seedNotificationPreferences();
   await seedContentReviews();
+
+  const insightCount = await prisma.insightPost.count();
+  if (insightCount === 0) {
+    await prisma.insightPost.createMany({
+      data: [
+        {
+          organizationId: organization.id,
+          content:
+            "Las prácticas compartidas del equipo mantienen vivo el aprendizaje cuando alguien documenta los ajustes.",
+          isAnonymous: true,
+          shareLevel: "TEAM",
+          status: "APPROVED",
+        },
+        {
+          organizationId: organization.id,
+          content:
+            "La sensibilidad al otro se activa cuando validamos los avances en voz alta, no solo en números.",
+          isAnonymous: true,
+          shareLevel: "PUBLIC",
+          status: "APPROVED",
+        },
+      ],
+    });
+  }
 
   for (const provider of [
     "MercadoPago",

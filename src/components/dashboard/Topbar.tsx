@@ -1,16 +1,22 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import ProfileMenu from "./ProfileMenu";
+import FlowGlowCTA from "@/components/ui/FlowGlowCTA";
+import type { FeatureFlags } from "@/config/navigation";
 import type { Role } from "@prisma/client";
 
 export default async function Topbar({
   lang,
   roles,
   activeRole,
+  flags,
+  flowReady,
 }: {
   lang: string;
   roles: Role[];
   activeRole: Role;
+  flags: FeatureFlags;
+  flowReady: boolean;
 }) {
   const session = await getServerSession(authOptions);
 
@@ -26,13 +32,18 @@ export default async function Topbar({
         </p>
         <h1 className="font-heading text-2xl text-ink">ALKAYA Control</h1>
       </div>
-      <ProfileMenu
-        lang={lang}
-        name={session.user.name}
-        email={session.user.email}
-        role={activeRole}
-        roles={roles}
-      />
+      <div className="flex items-center gap-4">
+        {flags.flowGlowEnabled && (
+          <FlowGlowCTA ready={flowReady} />
+        )}
+        <ProfileMenu
+          lang={lang}
+          name={session.user.name}
+          email={session.user.email}
+          role={activeRole}
+          roles={roles}
+        />
+      </div>
     </header>
   );
 }

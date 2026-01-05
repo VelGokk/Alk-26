@@ -126,7 +126,7 @@ export default async function PageEditor({
           <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
             Estado: {isPublished ? "Publicado" : "Borrador"}
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="submit"
               name="action"
@@ -136,12 +136,21 @@ export default async function PageEditor({
               {isPublished ? "Despublicar" : "Publicar"}
             </button>
             <Link
-              href={previewPath}
+              href={
+                page?.previewToken
+                  ? `${previewPath}?token=${page.previewToken}`
+                  : previewPath
+              }
               target="_blank"
               className="rounded-full border border-black/10 bg-white px-4 py-2 text-xs uppercase tracking-[0.2em] text-zinc-600"
             >
               Preview
             </Link>
+            {page?.previewToken ? (
+              <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">
+                Link secreto activo
+              </span>
+            ) : null}
           </div>
         </div>
       </form>

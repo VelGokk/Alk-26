@@ -13,6 +13,10 @@ import { prisma } from "@/lib/prisma";
 import LegalComplianceOverlay, {
   type LegalComplianceLabels,
 } from "@/components/dashboard/legal/LegalComplianceOverlay";
+import { getTenantConfigForUser, tenantCssVars } from "@/lib/tenant";
+import { getFlowReadiness } from "@/lib/flow";
+import CursorDot from "@/components/ui/CursorDot";
+import ConsciousnessFeed from "@/components/dashboard/ConsciousnessFeed";
 
 export default async function DashboardLayout({
   children,
@@ -29,6 +33,11 @@ export default async function DashboardLayout({
   }
 
   const featureFlags = getFeatureFlags();
+  const tenantConfig = featureFlags.multiTenantEnabled
+    ? await getTenantConfigForUser(session?.user?.id)
+    : null;
+  const tenantSlug = tenantConfig?.slug ?? "alkaya";
+  const flowReady = await getFlowReadiness(session?.user?.id);
   const sessionRoles =
     session.user.roles && session.user.roles.length > 0
       ? session.user.roles
@@ -55,8 +64,16 @@ export default async function DashboardLayout({
     (Boolean(session.user.pendingLegalUpdate) ||
       session.user.signedLegalDocumentId !== activeDocument?.id);
 
+  const tenantStyle = featureFlags.multiTenantEnabled
+    ? tenantCssVars(tenantConfig)
+    : undefined;
+
   return (
-    <div className="flex min-h-screen">
+    <div
+      className="flex min-h-screen"
+      data-tenant={featureFlags.multiTenantEnabled ? tenantSlug : "alkaya"}
+      style={tenantStyle}
+    >
       <Sidebar
         lang={resolvedParams.lang}
         flags={featureFlags}
@@ -67,13 +84,23 @@ export default async function DashboardLayout({
           lang={resolvedParams.lang}
           roles={sessionRoles}
           activeRole={activeRole}
+          flags={featureFlags}
+          flowReady={featureFlags.flowGlowEnabled ? flowReady : false}
         />
-        <main className="flex-1 bg-grid px-6 py-8">{children}</main>
+        <main className="flex-1 bg-grid px-6 py-8 space-y-8">
+          {children}
+          {featureFlags.insightsFeedEnabled ? (
+            <ConsciousnessFeed organizationId={tenantConfig?.organizationId} />
+          ) : null}
+        </main>
         <LegalComplianceOverlay
           document={needsSignature ? activeDocument : null}
           labels={overlayLabels}
         />
       </div>
+      {featureFlags.cursorDotEnabled && (
+        <CursorDot color={tenantConfig?.cursorColor ?? "var(--brand-accent)"} />
+      )}
     </div>
   );
 }

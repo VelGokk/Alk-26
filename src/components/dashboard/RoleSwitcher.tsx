@@ -12,6 +12,7 @@ type RoleSwitcherProps = {
   roles: Role[];
   activeRole: Role;
   lang: AppLocale;
+  title?: string;
 };
 
 export default function RoleSwitcher({
@@ -57,7 +58,7 @@ export default function RoleSwitcher({
   return (
     <div className="mt-4 space-y-2">
       <p className="text-[10px] uppercase tracking-[0.24em] text-zinc-500">
-        Cambiar rol
+        {title ?? "Cambiar rol"}
       </p>
       <div className="flex flex-wrap gap-2">
         {availableRoles.map((role) => {

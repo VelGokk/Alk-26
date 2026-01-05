@@ -15,6 +15,7 @@ import {
   Video,
   Wrench,
 } from "lucide-react";
+import type { FeatureFlags as DashboardFeatureFlags } from "./feature-flags";
 
 export const ICON_COMPONENTS = {
   ShieldCheck,
@@ -33,7 +34,7 @@ export const ICON_COMPONENTS = {
 
 export type NavigationIconName = keyof typeof ICON_COMPONENTS;
 
-export type FeatureFlags = Record<string, boolean>;
+export type FeatureFlags = DashboardFeatureFlags;
 
 export type DashboardNavItem = {
   id: string;
@@ -243,6 +244,13 @@ export const NAVIGATION_ITEMS: DashboardNavItem[] = [
     labelKey: "notifications",
     path: (lang) => paths.dashboard.section(lang, "app") + "/notifications",
     icon: "ClipboardList",
+    roles: ["USER", "SUBSCRIBER", "SUPERADMIN"],
+  },
+  {
+    id: "student-paths",
+    labelKey: "learningPaths",
+    path: (lang) => paths.dashboard.section(lang, "app") + "/paths",
+    icon: "Layers",
     roles: ["USER", "SUBSCRIBER", "SUPERADMIN"],
   },
 ];

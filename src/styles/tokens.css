@@ -5,6 +5,11 @@
   --color-secondary: var(--cta);
   --color-border: var(--border);
   --color-surface-muted: var(--surface-muted);
+  --brand-primary: var(--brand-900);
+  --brand-secondary: var(--brand-600);
+  --brand-accent: var(--cta);
+  --panel-radius: 24px;
+  --panel-blur: 16px;
 }
 
 .noise-overlay {
@@ -23,9 +28,10 @@
 }
 
 @layer utilities {
-  .glass-panel {
+.glass-panel {
     background: rgb(from var(--surface) r g b / 0.86);
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(var(--panel-blur));
+    border-radius: var(--panel-radius);
     border: 1px solid var(--border);
   }
 }
