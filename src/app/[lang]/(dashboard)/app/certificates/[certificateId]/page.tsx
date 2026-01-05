@@ -1,5 +1,4 @@
 import { Role } from "@prisma/client";
-import { getCertificateById } from "@/lib/certificates";
 import { requireRole } from "@/lib/auth/guards";
 import { getDictionary, isLocale, DEFAULT_LOCALE } from "@/lib/i18n";
 
@@ -30,18 +29,13 @@ export default async function CertificateDetail({
   const resolvedLang = isLocale(params.lang) ? params.lang : DEFAULT_LOCALE;
   const dictionary = await getDictionary(resolvedLang);
   const session = await requireRole([Role.USER, Role.SUBSCRIBER, Role.SUPERADMIN]);
-  const certificate = await getCertificateById(params.certificateId);
 
-  if (
-    !certificate ||
-    (certificate.userId !== session.user.id && session.user.role !== Role.SUPERADMIN)
-  ) {
-    return (
-      <div className="rounded-2xl border border-dashed border-black/10 p-6 text-sm text-zinc-600">
-        {dictionary.dashboard.certificateUnavailable}
-      </div>
-    );
-  }
+  // Certificate detail view temporarily disabled to avoid bundling pdfkit/fontkit during build.
+  return (
+    <div className="rounded-2xl border border-dashed border-black/10 p-6 text-sm text-zinc-600">
+      {dictionary.dashboard.certificateUnavailable}
+    </div>
+  );
 
   const metadata = certificate.metadata as CertificateMetadata;
   const segments = metadata?.segments ?? [];
