@@ -1,4 +1,4 @@
-import type { NotificationType } from "@prisma/client";
+import { NotificationType } from "@prisma/client";
 
 export const NOTIFICATION_BATCH_WINDOW_MINUTES = 10;
 
