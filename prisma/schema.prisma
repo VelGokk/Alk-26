@@ -140,6 +140,7 @@ model User {
   courses                  Course[]                 @relation("InstructorCourses")
   reviews                  CourseReview[]           @relation("ReviewerCourses")
   enrollments              Enrollment[]
+  certificates             Certificate[]
   payments                 Payment[]
   cart                     Cart?
   comments                 Comment[]
@@ -147,6 +148,7 @@ model User {
   moderationActions        ModerationAction[]       @relation("ModeratorActions")
   subjectModerationActions ModerationAction[]       @relation("SubjectActions")
   logs                     SystemLog[]
+  auditLogs                AuditLog[]
   blogPosts                BlogPost[]
   couponsCreated           Coupon[]                 @relation("CouponCreator")
   liveSessions             LiveSession[]            @relation("LiveSessionCreator")
@@ -352,6 +354,7 @@ model Program {
 
   modules         ProgramModule[]
   enrollments     ProgramEnrollment[]
+  certificates     Certificate[]
   tagRelations    ProgramTagRelation[]
   ontologicalLogs OntologicalLog[]
 }
@@ -504,6 +507,7 @@ model Enrollment {
   course   Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
   payment  Payment?         @relation(fields: [paymentId], references: [id])
   progress LessonProgress[]
+  certificate Certificate?
 
   @@unique([userId, courseId])
 }
@@ -722,6 +726,25 @@ model SystemLog {
   createdAt DateTime @default(now())
 
   user User? @relation(fields: [userId], references: [id])
+}
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  action       String
+  resourceType String?
+  resourceId   String?
+  userId       String?
+  status       String?
+  source       String?
+  ip           String?
+  userAgent    String?
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([resourceType, resourceId])
 }
 
 model Notification {
