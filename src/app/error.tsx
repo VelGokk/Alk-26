@@ -1,3 +1,5 @@
+"use client";
+
 import { LogLevel } from "@prisma/client";
 import { logEvent } from "@/lib/logger";
 import { ErrorFallback } from "@/components/error/ErrorFallback";

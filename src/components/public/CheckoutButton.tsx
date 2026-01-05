@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import dictionary from "@/config/dictionaries/es.json";
+import { Button } from "@/components/ui/button";
 
 export default function CheckoutButton({ disabled }: { disabled?: boolean }) {
   const [loading, setLoading] = useState(false);
@@ -28,13 +29,14 @@ export default function CheckoutButton({ disabled }: { disabled?: boolean }) {
   }
 
   return (
-    <button
+    <Button
       type="button"
+      size="default"
+      variant="default"
       disabled={disabled || loading}
       onClick={handleCheckout}
-      className="rounded-full bg-ink px-6 py-3 text-xs uppercase tracking-[0.2em] text-white disabled:opacity-50"
     >
       {loading ? checkout.loading : checkout.pay}
-    </button>
+    </Button>
   );
 }

@@ -15,12 +15,22 @@ export const DEFAULT_SETTINGS = {
 };
 
 export async function getBranding() {
-  const branding = await prisma.brandingSetting.findFirst();
-  return branding ?? DEFAULT_BRANDING;
+  try {
+    const branding = await prisma.brandingSetting.findFirst();
+    return branding ?? DEFAULT_BRANDING;
+  } catch (err) {
+    console.error("getBranding: unable to reach database, returning default branding", err);
+    return DEFAULT_BRANDING;
+  }
 }
 
 export async function getSystemSettings() {
-  const settings = await prisma.systemSetting.findFirst();
-  return settings ?? DEFAULT_SETTINGS;
+  try {
+    const settings = await prisma.systemSetting.findFirst();
+    return settings ?? DEFAULT_SETTINGS;
+  } catch (err) {
+    console.error("getSystemSettings: unable to reach database, returning default settings", err);
+    return DEFAULT_SETTINGS;
+  }
 }
 

@@ -8,10 +8,8 @@ if (-not $BaseUrl) {
 
 $BaseUrl = $BaseUrl.TrimEnd("/")
 
-$handler = New-Object System.Net.Http.HttpClientHandler
-$handler.AllowAutoRedirect = $false
-$client = New-Object System.Net.Http.HttpClient($handler)
-$client.Timeout = [TimeSpan]::FromSeconds(10)
+ # Use Invoke-WebRequest to stay compatible across PowerShell runtimes
+ # We'll disable automatic redirection and set a timeout per request.
 
 $routes = @(
   @{ Name = "home"; Path = "/es-ar"; Expect = @(200) },
@@ -39,17 +37,21 @@ $failed = @()
 foreach ($route in $routes) {
   $uri = $BaseUrl + $route.Path
   try {
-    $response = $client.GetAsync($uri, [System.Net.Http.HttpCompletionOption]::ResponseHeadersRead).Result
-    $status = [int]$response.StatusCode
+    # Try a request without following redirects so we can capture 3xx responses
+    $response = Invoke-WebRequest -Uri $uri -Method Get -MaximumRedirection 0 -TimeoutSec 10 -ErrorAction Stop
+    $status = if ($response.StatusCode) { [int]$response.StatusCode } else { 0 }
+    $headers = $response.Headers
     $ok = $route.Expect -contains $status
 
     if ($ok -and $route.ContainsKey("LocationPrefix")) {
-      $location = $response.Headers.Location
-      if (-not $location) {
+      $locationValue = $null
+      if ($headers -and $headers.Keys -contains 'Location') { $locationValue = $headers['Location'] }
+      if (-not $locationValue -and $headers.Location) { $locationValue = $headers.Location }
+
+      if (-not $locationValue) {
         $ok = $false
       } else {
-        $locationValue = $location.ToString()
-        if ($locationValue.StartsWith("http")) {
+        if ($locationValue.StartsWith('http')) {
           $ok = $locationValue -like "*$($route.LocationPrefix)*"
         } else {
           $ok = $locationValue.StartsWith($route.LocationPrefix)
@@ -64,8 +66,40 @@ foreach ($route in $routes) {
       $failed += $route.Name
     }
   } catch {
-    Write-Host ("FAIL {0} {1} -> error {2}" -f $route.Name, $route.Path, $_.Exception.Message)
-    $failed += $route.Name
+    # If Invoke-WebRequest throws due to a non-success status or network error,
+    # try to extract a status code from the exception response (if any).
+    $err = $_
+    $status = 0
+    $headers = $null
+    if ($err.Exception -and $err.Exception.Response) {
+      try {
+        $resp = $err.Exception.Response
+        if ($resp.StatusCode) { $status = [int]$resp.StatusCode }
+        if ($resp.Headers) { $headers = $resp.Headers }
+      } catch { }
+    }
+
+    if ($status -ne 0) {
+      $ok = $route.Expect -contains $status
+      if ($ok -and $route.ContainsKey("LocationPrefix")) {
+        $locationValue = $null
+        if ($headers -and $headers.Keys -contains 'Location') { $locationValue = $headers['Location'] }
+        if (-not $locationValue -and $headers.Location) { $locationValue = $headers.Location }
+        if (-not $locationValue) { $ok = $false } else {
+          if ($locationValue.StartsWith('http')) { $ok = $locationValue -like "*$($route.LocationPrefix)*" } else { $ok = $locationValue.StartsWith($route.LocationPrefix) }
+        }
+      }
+
+      if ($ok) {
+        Write-Host ("OK  {0} {1} -> {2}" -f $route.Name, $route.Path, $status)
+      } else {
+        Write-Host ("FAIL {0} {1} -> {2}" -f $route.Name, $route.Path, $status)
+        $failed += $route.Name
+      }
+    } else {
+      Write-Host ("FAIL {0} {1} -> error {2}" -f $route.Name, $route.Path, $err.Exception.Message)
+      $failed += $route.Name
+    }
   }
 }
 

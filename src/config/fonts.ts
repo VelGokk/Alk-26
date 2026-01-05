@@ -2,7 +2,7 @@ import { DM_Serif_Display, Inter, Poppins } from "next/font/google";
 
 const headingFontConfig = DM_Serif_Display({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400"],
   variable: "--font-heading",
   fallback: ["Playfair Display", "serif"],
 });

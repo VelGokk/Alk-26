@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 type ProgramLessonCompleteButtonProps = {
   lessonId: string;
@@ -44,20 +45,22 @@ export default function ProgramLessonCompleteButton({
   };
 
   return (
-    <div className="space-y-2">
-      <button
-        type="button"
-        disabled={completed || loading}
-        onClick={handleComplete}
-        className="flex items-center justify-center rounded-full border border-black/10 bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-ink transition hover:border-black/30 disabled:bg-slate-100 disabled:text-slate-400"
-      >
-        {loading ? "..." : completed ? completedLabel : label}
-      </button>
-      {error ? (
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-600">
-          {error}
-        </p>
-      ) : null}
-    </div>
-  );
-}
+      <div className="space-y-2">
+        <Button
+          type="button"
+          size="default"
+          variant={completed ? "ghost" : "outline"}
+          disabled={completed || loading}
+          onClick={handleComplete}
+          className="w-full"
+        >
+          {loading ? "..." : completed ? completedLabel : label}
+        </Button>
+        {error ? (
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-600">
+            {error}
+          </p>
+        ) : null}
+      </div>
+    );
+  }

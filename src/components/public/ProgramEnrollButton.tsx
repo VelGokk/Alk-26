@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 type ProgramEnrollButtonProps = {
   slug: string;
@@ -44,14 +45,15 @@ export default function ProgramEnrollButton({
 
   return (
     <div className="space-y-2">
-      <button
+      <Button
         type="button"
+        size="default"
+        variant="default"
         onClick={handleEnroll}
         disabled={loading || done}
-        className="rounded-full bg-ink px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-white transition disabled:opacity-60"
       >
         {loading ? "..." : done ? successLabel : label}
-      </button>
+      </Button>
       {error ? (
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-600">
           {error}

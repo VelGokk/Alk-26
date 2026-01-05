@@ -3,6 +3,7 @@ import type { ReactNode, CSSProperties } from "react";
 import { Providers } from "./providers";
 import "./globals.css";
 import { cssVariables } from "@/styles/tokens";
+import { fontVariables } from "@/config/fonts";
 import { SEO_DEFAULTS } from "@/config/seo";
 import { SUPPORTED_LOCALES } from "@/config/i18n";
 import { getBranding } from "@/lib/settings";

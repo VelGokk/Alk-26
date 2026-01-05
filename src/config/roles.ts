@@ -1,4 +1,4 @@
-import type { Role } from "@prisma/client";
+import { Role } from "@prisma/client";
 import type { DashboardSection } from "@/lib/paths";
 
 export const ROLE_LABELS = {

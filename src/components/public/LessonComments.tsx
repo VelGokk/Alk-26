@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Translator } from "@/lib/i18n";
 import { reportComment, createComment } from "@/lib/actions/comments";
 import { Session } from "next-auth";
+import { Button } from "@/components/ui/button";
 
 type LessonComment = {
   id: string;
@@ -69,12 +70,14 @@ export default function LessonComments({
             placeholder={translate("education.programLessonCommentPlaceholder")}
             className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm shadow-sm transition focus:border-ink focus:ring-1 focus:ring-ink"
           />
-          <button
+          <Button
             type="submit"
-            className="rounded-full bg-ink px-4 py-2 text-xs uppercase tracking-[0.3em] text-white"
+            variant="default"
+            size="sm"
+            className="w-full"
           >
             {translate("education.programLessonCommentSubmit")}
-          </button>
+          </Button>
         </form>
       ) : (
         <div className="mt-6 rounded-2xl border border-dashed border-black/10 bg-white/70 p-4 text-sm text-slate-600">
@@ -123,12 +126,14 @@ export default function LessonComments({
                       </option>
                     ))}
                   </select>
-                  <button
+                  <Button
                     type="submit"
-                    className="rounded-full border border-black/10 px-3 py-1 text-[10px] uppercase tracking-[0.3em]"
+                    variant="outline"
+                    size="sm"
+                    className="h-auto px-3 py-1 text-[10px]"
                   >
                     {translate("education.programLessonCommentReportButton")}
-                  </button>
+                  </Button>
                 </form>
               )}
             </article>

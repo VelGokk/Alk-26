@@ -23,6 +23,7 @@
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.5.1",
     "clsx": "^2.1.1",
+    "class-variance-authority": "^0.6.1",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.476.0",
     "mercadopago": "^2.0.8",
@@ -34,6 +35,9 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "resend": "^4.0.0",
+    "@radix-ui/react-dialog": "^1.1.5",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-slot": "^1.1.1",
     "tailwind-merge": "^2.5.5",
     "zod": "^3.23.8",
     "framer-motion": "^10.12.16"

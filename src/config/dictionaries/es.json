@@ -1,4 +1,4 @@
-﻿{
+{
   "brand": "ALKAYA",
   "nav": {
     "home": "Inicio",
@@ -184,7 +184,7 @@
     "eventsProgramLabel": "Programa",
     "eventsDateLabel": "Fecha y hora",
     "eventsLinkLabel": "Unirse",
-    "eventsReminderLabel": "Recordatorio 1h antes"
+    "eventsReminderLabel": "Recordatorio 1h antes",
     "searchPlaceholder": "Busca recursos, usuarios o pÃ¡ginas...",
     "searchHelp": "Pulsa âŒ˜/Ctrl + K para abrir la bÃºsqueda",
     "searchNoResults": "AÃºn no hay coincidencias.",
