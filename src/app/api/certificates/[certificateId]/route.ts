@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { Role } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { generateCertificatePdf, getCertificateById } from "@/lib/certificates";
+import { getCertificateById } from "@/lib/certificates";
 
 export async function GET(
   _: Request,
@@ -24,6 +24,7 @@ export async function GET(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  const { generateCertificatePdf } = await import("@/lib/certificates");
   const pdf = await generateCertificatePdf({
     certificateNumber: certificate.certificateNumber,
     issuedAt: certificate.issuedAt,
