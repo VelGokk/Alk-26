@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { Role } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import PDFDocument from "pdfkit";
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -29,6 +28,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "not_found" }, { status: 404 });
   }
 
+  const { default: PDFDocument } = await import("pdfkit");
   const doc = new PDFDocument({ margin: 48, size: "A4" });
   const chunks: Buffer[] = [];
 

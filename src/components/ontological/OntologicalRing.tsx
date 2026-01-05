@@ -193,16 +193,7 @@ export default async function OntologicalRing({
             {translate("education.programLessonsLabel")}
           </p>
         </div>
-        <style jsx>{`
-          .ontological-ring path.progress {
-            transition: stroke-dashoffset 0.9s ease, opacity 0.9s ease;
-          }
-          @media (prefers-reduced-motion: reduce) {
-            .ontological-ring path.progress {
-              transition: none !important;
-            }
-          }
-        `}</style>
+        {/* Styles moved to global CSS to keep this as a Server Component */}
       </div>
       <ul className="grid gap-2 text-[10px] uppercase tracking-[0.2em] text-slate-500">
         {segments.map((segment) => (

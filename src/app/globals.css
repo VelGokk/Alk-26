@@ -196,4 +196,14 @@ main {
       color-mix(in srgb, var(--text) 63.75%, var(--tide) 36.25%) 80%
     );
   }
+
+  /* Ontological ring progress animation (server-safe global style) */
+  .ontological-ring path.progress {
+    transition: stroke-dashoffset 0.9s ease, opacity 0.9s ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ontological-ring path.progress {
+      transition: none !important;
+    }
+  }
 }
