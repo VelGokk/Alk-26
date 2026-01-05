@@ -91,52 +91,12 @@ export async function generateCertificatePdf(certificate: {
   user: { name?: string | null; email?: string | null };
   program: { title: string };
 }) {
-  return new Promise<Buffer>(async (resolve, reject) => {
-    let PDFDocument: any;
-    try {
-      // Obfuscate require call to avoid static bundler analysis
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      PDFDocument = eval("requ" + "ire")("pdfkit");
-    } catch {
-      const mod = await import("pdfkit");
-      PDFDocument = mod.default;
-    }
-
-    const doc = new PDFDocument({
-      size: "A4",
-      margins: { top: 64, bottom: 64, left: 64, right: 64 },
-    });
-    const chunks: Buffer[] = [];
-    doc.on("data", (chunk) => chunks.push(chunk));
-    doc.on("end", () => resolve(Buffer.concat(chunks)));
-    doc.on("error", reject);
-
-    doc.font("Times-Bold").fontSize(20).text("ALKAYA CERTIFICATE", {
-      align: "center",
-    });
-    doc.moveDown(1.5);
-    doc.font("Times-Roman").fontSize(14).text(
-      `This certifies that ${certificate.user.name ?? certificate.user.email ?? "Anonymous"} has completed the program "${certificate.program.title}".`,
-      {
-        align: "center",
-        lineGap: 6,
-      }
-    );
-    doc.moveDown(2);
-    doc.fontSize(12).text(`Certificate Number: ${certificate.certificateNumber}`, {
-      align: "center",
-    });
-    doc.text(`Issued: ${certificate.issuedAt.toISOString().split("T")[0]}`, {
-      align: "center",
-    });
-    doc.moveDown(1);
-    doc
-      .fontSize(10)
-      .text(
-        "Verifiable at ALKAYA LMS with the certificate ID above. This PDF is deterministic and reproducible from the stored records.",
-        { align: "center" }
-      );
-    doc.end();
-  });
+  // PDF generation is disabled during the Next/Turbopack build to avoid
+  // bundling native-heavy libraries (pdfkit/fontkit) into the server bundle.
+  // Move PDF generation to an external service or a separate runtime worker.
+  // Callers should handle this error and fallback to a placeholder or a
+  // remote PDF generation endpoint.
+  throw new Error(
+    "PDF generation is disabled in this build. Use the external PDF service."
+  );
 }
