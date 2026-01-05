@@ -94,10 +94,10 @@ export async function generateCertificatePdf(certificate: {
   return new Promise<Buffer>(async (resolve, reject) => {
     let PDFDocument: any;
     try {
-      // Try to require at runtime without static import so Turbopack doesn't bundle fontkit
+      // Obfuscate require call to avoid static bundler analysis
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      PDFDocument = eval("require")("pdfkit");
+      PDFDocument = eval("requ" + "ire")("pdfkit");
     } catch {
       const mod = await import("pdfkit");
       PDFDocument = mod.default;

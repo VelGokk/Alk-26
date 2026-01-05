@@ -30,9 +30,10 @@ export async function GET(req: NextRequest) {
 
   let PDFDocument: any;
   try {
+    // Obfuscate require call to avoid static bundler analysis
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    PDFDocument = eval("require")("pdfkit");
+    PDFDocument = eval("requ" + "ire")("pdfkit");
   } catch {
     const mod = await import("pdfkit");
     PDFDocument = mod.default;
