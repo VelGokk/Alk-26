@@ -1,0 +1,17 @@
+{
+  "buildCommand": "npm install --legacy-peer-deps && npm run build",
+  "installCommand": "npm install --legacy-peer-deps",
+  "framework": "nextjs",
+  "nodejs": "20.x",
+  "env": {
+    "NEXTAUTH_SECRET": "@nextauth_secret",
+    "DATABASE_URL": "@database_url",
+    "NEXTAUTH_URL": "@nextauth_url"
+  },
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "fix/qa-lint-type": true
+    }
+  }
+}
