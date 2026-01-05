@@ -3,14 +3,17 @@ import Image from "next/image";
 import { Course } from "@prisma/client";
 import { formatCurrency } from "@/lib/utils";
 import { DEFAULT_LOCALE, isLocale, type AppLocale } from "@/lib/i18n";
-import esAr from "@/lib/dictionaries/es-ar.json";
-import esMx from "@/lib/dictionaries/es-mx.json";
-import en from "@/lib/dictionaries/en.json";
+import type { AppDictionary } from "@/lib/i18n";
+import { paths } from "@/lib/paths";
+import es from "@/config/dictionaries/es.json";
+import en from "@/config/dictionaries/en.json";
+import pt from "@/config/dictionaries/pt.json";
 
-const dictionaries: Record<AppLocale, typeof esAr> = {
-  "es-ar": esAr,
-  "es-mx": esMx,
+const dictionaries: Record<AppLocale, AppDictionary> = {
+  "es-ar": es,
+  "es-mx": es,
   en,
+  pt,
 };
 
 type CourseCardProps = {
@@ -19,7 +22,8 @@ type CourseCardProps = {
 };
 
 export default function CourseCard({ course, lang }: CourseCardProps) {
-  const dictionary = dictionaries[isLocale(lang) ? lang : DEFAULT_LOCALE];
+  const resolvedLang = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const dictionary = dictionaries[resolvedLang];
   return (
     <div className="glass-panel rounded-2xl p-4 shadow-glow">
       <div className="relative h-40 w-full overflow-hidden rounded-xl bg-black/5">
@@ -47,7 +51,7 @@ export default function CourseCard({ course, lang }: CourseCardProps) {
             {formatCurrency(course.price, course.currency)}
           </span>
           <Link
-            href={`/${lang}/courses`}
+            href={paths.public.courses(resolvedLang)}
             className="text-xs uppercase tracking-[0.2em] text-brass"
           >
             {dictionary.courseCard.view}

@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth/guards";
-import { Role } from "@prisma/client";
+import { NotificationType, Role } from "@prisma/client";
+import { notifyUser } from "@/lib/notifications";
 
 export async function approveCourse(formData: FormData) {
   const session = await requireRole([Role.REVIEWER, Role.SUPERADMIN]);
@@ -24,6 +25,14 @@ export async function approveCourse(formData: FormData) {
   await prisma.course.update({
     where: { id: review.courseId },
     data: { status: "PUBLISHED" },
+  });
+
+  await notifyUser({
+    userId: review.course.instructorId,
+    type: NotificationType.REVIEW_APPROVED,
+    title: "Course approved",
+    body: `Tu curso ${review.course.title} fue aprobado.`,
+    referenceId: review.courseId,
   });
 
   revalidatePath("/reviewer/pending");
@@ -49,6 +58,14 @@ export async function rejectCourse(formData: FormData) {
   await prisma.course.update({
     where: { id: review.courseId },
     data: { status: "REJECTED" },
+  });
+
+  await notifyUser({
+    userId: review.course.instructorId,
+    type: NotificationType.REVIEW_CHANGES_REQUESTED,
+    title: "Review requires changes",
+    body: `El curso ${review.course.title} necesita ajustes: ${comment}`,
+    referenceId: review.courseId,
   });
 
   revalidatePath("/reviewer/pending");

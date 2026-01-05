@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getBranding } from "@/lib/settings";
-import dictionary from "@/lib/dictionaries/es-ar.json";
+import dictionary from "@/config/dictionaries/es.json";
 
 export default async function BrandMark({ href }: { href: string }) {
   const branding = await getBranding();

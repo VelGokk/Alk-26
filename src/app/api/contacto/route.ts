@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { DEFAULT_LOCALE, isLocale } from "@/lib/i18n";
-import { sendEmail } from "@/lib/integrations/resend";
+import { deliverEmail } from "@/lib/email";
+import {
+  contactConfirmationTemplate,
+  supportContactTemplate,
+} from "@/emails/templates/contact";
 
 export async function POST(request: Request) {
   const formData = await request.formData();
@@ -16,23 +20,19 @@ export async function POST(request: Request) {
   }
 
   const subject = `Nuevo contacto (${tipo})`;
-  const html = `
-    <div>
-      <p>Nuevo mensaje desde ALKAYA.</p>
-      <p><strong>Nombre:</strong> ${nombre}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Tipo:</strong> ${tipo}</p>
-      <p><strong>Mensaje:</strong> ${mensaje || "Sin mensaje"}</p>
-    </div>
-  `;
+  const supportRecipient = process.env.CONTACT_SUPPORT_EMAIL ?? process.env.RESEND_FROM ?? "hola@alkaya.com";
 
-  const fallbackRecipient = "hola@alkaya.com";
-  const recipient = process.env.RESEND_FROM ?? fallbackRecipient;
-
-  await sendEmail({
-    to: recipient,
+  await deliverEmail({
+    to: supportRecipient,
     subject,
-    html,
+    html: supportContactTemplate({ nombre, email, tipo, mensaje }),
+    metadata: { tipo, email },
+  });
+
+  await deliverEmail({
+    to: email,
+    subject: "Confirmamos tu mensaje",
+    html: contactConfirmationTemplate({ nombre, tipo }),
   });
 
   const redirectUrl = new URL(`/${lang}/contacto?enviado=1`, request.url);

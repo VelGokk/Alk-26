@@ -1,0 +1,52 @@
+{
+  "name": "ALKAYA | Consultoria Ontologica",
+  "short_name": "ALKAYA",
+  "description": "Consultora de coaching ontologico para lideres, equipos y organizaciones.",
+  "lang": "es-AR",
+  "start_url": "/es-ar",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/maskable_icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Entrar al panel",
+      "url": "/es-ar/auth",
+      "description": "Inicia sesión en el LMS",
+      "icons": [
+        {
+          "src": "/icons/icon.svg",
+          "sizes": "512x512",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Certificados",
+      "url": "/es-ar/app/certificates",
+      "description": "Revisa tus certificados",
+      "icons": [
+        {
+          "src": "/icons/maskable_icon.svg",
+          "sizes": "512x512",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}

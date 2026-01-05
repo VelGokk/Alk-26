@@ -1,0 +1,23 @@
+{
+  "SUPERADMIN": [
+    "bitacora.public.read",
+    "bitacora.private.write",
+    "content.create",
+    "content.approve",
+    "community.ban",
+    "billing.configure"
+  ],
+  "ADMIN": [
+    "bitacora.public.read",
+    "bitacora.private.write",
+    "content.create",
+    "content.approve",
+    "community.ban",
+    "billing.configure"
+  ],
+  "INSTRUCTOR": ["bitacora.public.read", "content.create"],
+  "REVIEWER": ["bitacora.public.read", "content.approve"],
+  "MODERATOR": ["bitacora.public.read", "community.ban"],
+  "USER": ["bitacora.public.read", "content.create"],
+  "SUBSCRIBER": ["bitacora.public.read"]
+}

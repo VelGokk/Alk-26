@@ -1,10 +1,13 @@
+import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { fetchPayment, isMercadoPagoConfigured } from "@/lib/integrations/mercadopago";
 import { PaymentStatus } from "@prisma/client";
-import type { Prisma } from "@prisma/client";
 import { logEvent } from "@/lib/logger";
-import { sendEmail } from "@/lib/integrations/resend";
+import { deliverEmail } from "@/lib/email";
+import { paymentReceiptTemplate } from "@/emails/templates/transactional";
+
+type WebhookPayload = Record<string, unknown>;
 
 export const runtime = "nodejs";
 
@@ -15,15 +18,16 @@ function mapStatus(status?: string | null) {
     case "in_process":
     case "pending":
     case "authorized":
-      return PaymentStatus.PENDING;
+      return PaymentStatus.PROCESSING;
     case "rejected":
-    case "cancelled":
       return PaymentStatus.FAILED;
+    case "cancelled":
+      return PaymentStatus.CANCELLED;
     case "refunded":
     case "charged_back":
       return PaymentStatus.REFUNDED;
     default:
-      return PaymentStatus.PENDING;
+      return PaymentStatus.PROCESSING;
   }
 }
 
@@ -38,6 +42,11 @@ export async function POST(request: Request) {
     body?.data?.id ||
     searchParams.get("data.id") ||
     searchParams.get("id");
+
+  const idempotencyKey =
+    request.headers.get("x-idempotency-key") ??
+    request.headers.get("X-Idempotency-Key") ??
+    undefined;
 
   if (!paymentId) {
     return NextResponse.json({ status: "missing_payment_id" });
@@ -57,6 +66,50 @@ export async function POST(request: Request) {
 
   if (!payment) {
     return NextResponse.json({ status: "unknown_payment" });
+  }
+
+  const providerEventId = String(paymentInfo.id ?? paymentId);
+  if (idempotencyKey) {
+    const existing = await prisma.paymentWebhookEvent.findUnique({
+      where: { idempotencyKey },
+    });
+    if (existing) {
+      return NextResponse.json({
+        status: "duplicate",
+        existingStatus: existing.status,
+      });
+    }
+  }
+  const existingEvent = await prisma.paymentWebhookEvent.findUnique({
+    where: { providerEventId },
+  });
+  if (existingEvent) {
+    return NextResponse.json({
+      status: "duplicate",
+      existingStatus: existingEvent.status,
+    });
+  }
+
+  const payload: Prisma.InputJsonValue =
+    (body as Prisma.InputJsonValue) ?? Prisma.JsonNull;
+  try {
+    await prisma.paymentWebhookEvent.create({
+      data: {
+        paymentId: payment.id,
+        providerEventId,
+        idempotencyKey,
+        status,
+        payload,
+      },
+    });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return NextResponse.json({ status: "duplicate" });
+    }
+    throw error;
   }
 
   const currentMetadata = (payment.metadata ?? {}) as Record<string, unknown>;
@@ -98,10 +151,22 @@ export async function POST(request: Request) {
 
     const user = await prisma.user.findUnique({ where: { id: payment.userId } });
     if (user?.email) {
-      await sendEmail({
+      const purchasedCourses =
+        courseIds.length > 0
+          ? await prisma.course.findMany({
+              where: { id: { in: courseIds } },
+              select: { title: true },
+            })
+          : [];
+      await deliverEmail({
         to: user.email,
-        subject: "Compra confirmada",
-        html: `<p>Tu compra en ALKAYA fue aprobada. Ya podes acceder a tus cursos.</p>`,
+        subject: "Pago aprobado",
+        html: paymentReceiptTemplate({
+          nombre: user.name ?? user.email ?? "Alkaya User",
+          cursos: purchasedCourses.map((course) => course.title),
+          monto: payment.amount,
+          currency: payment.currency,
+        }),
       });
     }
   }

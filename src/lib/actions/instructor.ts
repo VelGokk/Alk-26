@@ -3,8 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth/guards";
-import { Role } from "@prisma/client";
+import { NotificationType, Role } from "@prisma/client";
 import { slugify } from "@/lib/utils";
+import { notifyUser } from "@/lib/notifications";
 
 export async function createCourse(formData: FormData) {
   const session = await requireRole([Role.INSTRUCTOR, Role.SUPERADMIN]);
@@ -88,6 +89,16 @@ export async function submitForReview(formData: FormData) {
       comment: "Enviado a revision",
     },
   });
+
+  if (reviewer?.id) {
+    await notifyUser({
+      userId: reviewer.id,
+      type: NotificationType.REVIEW_REQUESTED,
+      title: "Nuevo contenido para revisión",
+      body: `El curso ${course.title} solicita revisión.`,
+      referenceId: course.id,
+    });
+  }
 
   revalidatePath("/instructor/courses");
 }

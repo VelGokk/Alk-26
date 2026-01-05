@@ -4,21 +4,30 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import type { Role } from "@prisma/client";
 import { useId, useState } from "react";
-import { ROLE_HOME, ROLE_LABELS } from "@/lib/constants";
+import { ROLE_LABELS } from "@/lib/constants";
+import { DEFAULT_LOCALE, isLocale } from "@/lib/i18n";
+import { paths, type DashboardSection } from "@/lib/paths";
+import RoleSwitcher from "./RoleSwitcher";
+import { ROLE_DASHBOARD_SECTION } from "@/config/roles";
 
 export default function ProfileMenu({
   name,
   email,
   lang,
-  role,
+  roles,
+  activeRole,
 }: {
   name?: string | null;
   email?: string | null;
   lang: string;
-  role?: Role | null;
+  roles: Role[];
+  activeRole: Role;
 }) {
-  const roleLabel = role ? ROLE_LABELS[role] : "Usuario";
-  const homePath = role ? ROLE_HOME[role] : "/app";
+  const resolvedLang = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const roleLabel = ROLE_LABELS[activeRole] ?? "Usuario";
+  const dashboardSection: DashboardSection =
+    ROLE_DASHBOARD_SECTION[activeRole] ?? "app";
+  const homeHref = paths.dashboard.section(resolvedLang, dashboardSection);
   const menuId = useId();
   const [open, setOpen] = useState(false);
 
@@ -50,28 +59,31 @@ export default function ProfileMenu({
           <p>Rol</p>
           <p className="text-xs text-ink">{roleLabel}</p>
         </div>
+        <RoleSwitcher roles={roles} activeRole={activeRole} lang={resolvedLang} />
         <div className="mt-4 flex flex-col gap-2 text-xs uppercase tracking-[0.2em] text-zinc-600">
           <Link
-            href={`/${lang}${homePath}`}
+            href={homeHref}
             className="rounded-full border border-black/10 px-3 py-2 text-center"
           >
             Ir al panel
           </Link>
           <Link
-            href={`/${lang}/profile`}
+            href={paths.public.profile(resolvedLang)}
             className="rounded-full border border-black/10 px-3 py-2 text-center"
           >
             Perfil
           </Link>
           <Link
-            href={`/${lang}/profile?tab=settings`}
+            href={`${paths.public.profile(resolvedLang)}?tab=settings`}
             className="rounded-full border border-black/10 px-3 py-2 text-center"
           >
             Settings
           </Link>
           <button
             type="button"
-            onClick={() => signOut({ callbackUrl: `/${lang}/auth` })}
+            onClick={() =>
+              signOut({ callbackUrl: paths.auth.signIn(resolvedLang) })
+            }
             className="rounded-full border border-black/10 px-3 py-2 text-center"
           >
             Logout

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Section } from "@prisma/client";
 import { getDictionary, type AppLocale } from "@/lib/i18n";
+import { getSectionConfig, resolveSectionType } from "@/config/sections";
 
 type PageSectionsProps = {
   sections: Section[];
@@ -438,9 +439,11 @@ export default async function PageSections({
   return (
     <div className={spacingClass}>
       {visibleSections.map((section) => {
+        const sectionType = resolveSectionType(section.type);
+        const sectionMeta = getSectionConfig(sectionType);
         const data = getSectionData(section);
 
-        switch (section.type) {
+        switch (sectionType) {
           case "hero":
             return <div key={section.id}>{renderHero(data)}</div>;
           case "cards":
@@ -458,7 +461,24 @@ export default async function PageSections({
               </div>
             );
           default:
-            return null;
+            return (
+              <section
+                key={section.id}
+                className="glass-panel rounded-2xl border border-line/40 p-6 text-sm text-slate-500"
+              >
+                <p className="font-semibold text-zinc-500">
+                  Tipo desconocido{" "}
+                  <span className="text-xs uppercase tracking-[0.3em] text-slate-400">
+                    {section.type}
+                  </span>
+                </p>
+                <p className="mt-2 text-xs text-slate-400">
+                  {sectionMeta
+                    ? `Define este tipo en el editor (tipo ${sectionMeta.label}).`
+                    : "Agrega un tipo válido de sección desde el CMS."}
+                </p>
+              </section>
+            );
         }
       })}
     </div>

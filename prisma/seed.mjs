@@ -1,5 +1,6 @@
-import { PrismaClient, Role, CourseStatus } from "@prisma/client";
+import { PrismaClient, Role, CourseStatus, ProgramPhase } from "@prisma/client";
 import { hash } from "bcryptjs";
+import permissionMatrix from "../src/config/permissions.json" assert { type: "json" };
 
 const prisma = new PrismaClient();
 
@@ -648,19 +649,21 @@ async function seedPages() {
   for (const lang of LOCALES) {
     const pages = buildPages(lang);
     for (const page of pages) {
-      const created = await prisma.page.upsert({
-        where: { slug_lang: { slug: page.slug, lang } },
-        update: {
-          seoTitle: page.seoTitle,
-          seoDesc: page.seoDesc,
-        },
-        create: {
-          slug: page.slug,
-          lang,
-          seoTitle: page.seoTitle,
-          seoDesc: page.seoDesc,
-        },
-      });
+    const created = await prisma.page.upsert({
+      where: { slug_lang: { slug: page.slug, lang } },
+      update: {
+        seoTitle: page.seoTitle,
+        seoDesc: page.seoDesc,
+        isPublished: true,
+      },
+      create: {
+        slug: page.slug,
+        lang,
+        seoTitle: page.seoTitle,
+        seoDesc: page.seoDesc,
+        isPublished: true,
+      },
+    });
 
       await prisma.section.deleteMany({ where: { pageId: created.id } });
       await prisma.section.createMany({
@@ -674,6 +677,406 @@ async function seedPages() {
       });
     }
   }
+}
+
+async function seedRolePermissions() {
+  const entries = Object.entries(permissionMatrix) as [Role, string[]][];
+  for (const [role, permissions] of entries) {
+    const safePermissions = Array.isArray(permissions) ? permissions : [];
+    for (const permission of safePermissions) {
+      await prisma.rolePermission.upsert({
+        where: { role_permission: { role, permission } },
+        update: {},
+        create: { role, permission },
+      });
+    }
+  }
+}
+
+async function seedLegalDocuments() {
+  const defaultText =
+    "<p>Este contrato regula el uso del sistema. Actualice este contenido para reflejar sus términos específicos.</p>";
+  const targetRole = Role.SUPERADMIN;
+  const latest = await prisma.legalDocument.findFirst({
+    where: { roleTarget: targetRole, isActive: true },
+    orderBy: { versionNumber: "desc" },
+  });
+  if (!latest) {
+    await prisma.legalDocument.create({
+      data: {
+        roleTarget: targetRole,
+        title: "Contrato de Gobierno",
+        content: defaultText,
+        versionNumber: 1,
+        isActive: true,
+      },
+    });
+  }
+}
+
+async function seedPrograms() {
+  const programSlug = "observador-en-accion";
+  const programData = {
+    title: "Observador en acción",
+    summary:
+      "Programa premium para revisar cómo observas, decides y guías conversaciones complejas.",
+    strapline: "Desde la observación hasta la práctica sostenida",
+    duration: "8 semanas",
+    intensity: "2 encuentros semanales + prácticas guiadas",
+    heroImage:
+      "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1400&q=80",
+  };
+
+  const program = await prisma.program.upsert({
+    where: { slug: programSlug },
+    update: {
+      title: programData.title,
+      summary: programData.summary,
+      strapline: programData.strapline,
+      duration: programData.duration,
+      intensity: programData.intensity,
+      heroImage: programData.heroImage,
+      published: true,
+    },
+    create: {
+      slug: programSlug,
+      title: programData.title,
+      summary: programData.summary,
+      strapline: programData.strapline,
+      duration: programData.duration,
+      intensity: programData.intensity,
+      heroImage: programData.heroImage,
+      published: true,
+    },
+  });
+
+  await prisma.programModule.deleteMany({ where: { programId: program.id } });
+
+  const moduleBlueprints = [
+    {
+      title: "Descubrimiento y observación",
+      summary: "Mapea el sistema, las conversaciones y las tensiones invisibles.",
+      phase: ProgramPhase.DISCOVERY,
+      order: 0,
+      lessons: [
+        {
+          title: "Primer vistazo al sistema",
+          summary: "Reconoce los patrones que no ves al tomar decisiones.",
+          content:
+            "<p>Exploramos cómo nuestras interpretaciones configuran lo que consideramos posible. Dibujá el sistema que te rodea.</p>",
+          videoUrl: "https://www.youtube.com/watch?v=YdGzqxfj4KA",
+          durationMin: 18,
+          resource: {
+            title: "Guía de mapeo",
+            url: "https://example.com/observador/mapeo",
+            type: "guide",
+          },
+        },
+        {
+          title: "Escucha las conversaciones clave",
+          summary: "Escucha activa y preguntas que liberan conversaciones difíciles.",
+          content:
+            "<p>Ejercemos la escucha radical. Practica con casos reales y anota las preguntas que abren nuevas interpretaciones.</p>",
+          videoUrl: "https://www.youtube.com/watch?v=QO5vCjFjx5s",
+          durationMin: 20,
+          resource: {
+            title: "Cuaderno de escucha",
+            url: "https://example.com/observador/escucha",
+            type: "guide",
+          },
+        },
+      ],
+    },
+    {
+      title: "Práctica y decisiones",
+      summary: "Diseña intervenciones, compromisos y decisiones claras.",
+      phase: ProgramPhase.PRACTICE,
+      order: 1,
+      lessons: [
+        {
+          title: "Conversaciones con propósito",
+          summary: "Disciplinas para coordinar conversaciones con impacto.",
+          content:
+            "<p>Identificamos los elementos que hacen que una conversación cambie resultados. Practicá el hilo conductor.</p>",
+          videoUrl: "https://www.youtube.com/watch?v=lg6KAu7Awzg",
+          durationMin: 22,
+          resource: {
+            title: "Plantilla de conversación",
+            url: "https://example.com/observador/conversaciones",
+            type: "template",
+          },
+        },
+        {
+          title: "Decidir con el equipo",
+          summary: "Cómo coordinar acciones y compromisos con transparencia.",
+          content:
+            "<p>Compartimos formatos para cerrar compromisos y seguir avances. Documentá tus acuerdos en la herramienta.</p>",
+          videoUrl: "https://www.youtube.com/watch?v=Hf6D4tQ1vLA",
+          durationMin: 16,
+          resource: {
+            title: "Formato de compromiso",
+            url: "https://example.com/observador/decidir",
+            type: "template",
+          },
+        },
+      ],
+    },
+    {
+      title: "Sostenimiento y acompañamiento",
+      summary: "Integrá prácticas para monitorear y ajustar el recorrido.",
+      phase: ProgramPhase.SUSTAINMENT,
+      order: 2,
+      lessons: [
+        {
+          title: "Rituales de seguimiento",
+          summary: "Diseñá los espacios que mantienen el movimiento.",
+          content:
+            "<p>Construí una cadencia real. Establecimos indicadores y rituales para sostener nuevas prácticas.</p>",
+          videoUrl: "https://www.youtube.com/watch?v=2OWoXU1Y4gM",
+          durationMin: 14,
+          resource: {
+            title: "Checklist de rituales",
+            url: "https://example.com/observador/rituales",
+            type: "checklist",
+          },
+        },
+        {
+          title: "Acompañamiento humano",
+          summary: "Sostener la transformación con conversaciones de coaching.",
+          content:
+            "<p>Practica sesiones de acompañamiento y los interrogantes que sostienen el cambio.</p>",
+          videoUrl: "https://www.youtube.com/watch?v=rGsBoClF6G0",
+          durationMin: 17,
+          resource: {
+            title: "Guía de coaching",
+            url: "https://example.com/observador/coaching",
+            type: "guide",
+          },
+        },
+      ],
+    },
+  ];
+
+  const lessonRecords = [];
+  for (const moduleBlueprint of moduleBlueprints) {
+    const module = await prisma.programModule.create({
+      data: {
+        programId: program.id,
+        title: moduleBlueprint.title,
+        summary: moduleBlueprint.summary,
+        phase: moduleBlueprint.phase,
+        order: moduleBlueprint.order,
+      },
+    });
+
+    for (const [lessonIndex, lessonBlueprint] of moduleBlueprint.lessons.entries()) {
+      const lesson = await prisma.programLesson.create({
+        data: {
+          moduleId: module.id,
+          title: lessonBlueprint.title,
+          summary: lessonBlueprint.summary,
+          content: lessonBlueprint.content,
+          videoUrl: lessonBlueprint.videoUrl,
+          durationMin: lessonBlueprint.durationMin,
+          order: lessonIndex,
+        },
+      });
+
+      lessonRecords.push({
+        id: lesson.id,
+        phase: moduleBlueprint.phase,
+      });
+
+      if (lessonBlueprint.resource) {
+        await prisma.programResource.create({
+          data: {
+            lessonId: lesson.id,
+            title: lessonBlueprint.resource.title,
+            url: lessonBlueprint.resource.url,
+            type: lessonBlueprint.resource.type,
+          },
+        });
+      }
+    }
+  }
+
+  const tags = [
+    { name: "Observador", slug: "observador" },
+    { name: "Conversaciones", slug: "conversaciones" },
+    { name: "Equipos", slug: "equipos" },
+  ];
+  for (const tagInfo of tags) {
+    const tag = await prisma.programTag.upsert({
+      where: { slug: tagInfo.slug },
+      update: { name: tagInfo.name },
+      create: { name: tagInfo.name, slug: tagInfo.slug },
+    });
+    await prisma.programTagRelation.upsert({
+      where: {
+        programId_tagId: {
+          programId: program.id,
+          tagId: tag.id,
+        },
+      },
+      update: {},
+      create: {
+        programId: program.id,
+        tagId: tag.id,
+      },
+    });
+  }
+
+  const student = await prisma.user.findUnique({
+    where: { email: "user@alkaya.ai" },
+  });
+  if (!student) return;
+
+  const enrollment = await prisma.programEnrollment.upsert({
+    where: {
+      userId_programId: {
+        userId: student.id,
+        programId: program.id,
+      },
+    },
+    update: { status: "ACTIVE" },
+    create: {
+      userId: student.id,
+      programId: program.id,
+      status: "ACTIVE",
+    },
+  });
+
+  const completedLessons = lessonRecords.slice(0, 2);
+  for (const record of completedLessons) {
+    await prisma.programProgress.upsert({
+      where: {
+        enrollmentId_lessonId: {
+          enrollmentId: enrollment.id,
+          lessonId: record.id,
+        },
+      },
+      update: {
+        completed: true,
+        completedAt: new Date(),
+        phase: record.phase,
+      },
+      create: {
+        enrollmentId: enrollment.id,
+        lessonId: record.id,
+        completed: true,
+        completedAt: new Date(),
+        phase: record.phase,
+      },
+    });
+  }
+
+  const totalLessons = lessonRecords.length;
+  const completedCount = completedLessons.length;
+  const progressPercent = totalLessons
+    ? Math.round((completedCount / totalLessons) * 100)
+    : 0;
+
+  await prisma.programEnrollment.update({
+    where: { id: enrollment.id },
+    data: { progressPercent },
+  });
+}
+
+async function seedNotificationPreferences() {
+  const notificationTypes = [
+    "REVIEW_REQUESTED",
+    "REVIEW_APPROVED",
+    "REVIEW_CHANGES_REQUESTED",
+    "CERTIFICATE_READY",
+    "EVENT",
+  ];
+  const users = await prisma.user.findMany({ select: { id: true } });
+  for (const user of users) {
+    for (const type of notificationTypes) {
+      await prisma.notificationPreference.upsert({
+        where: { userId_type: { userId: user.id, type } },
+        update: {},
+        create: {
+          userId: user.id,
+          type,
+          enabled: true,
+        },
+      });
+    }
+  }
+}
+
+async function seedContentReviews() {
+  const instructor = await prisma.user.findUnique({
+    where: { email: "instructor@alkaya.ai" },
+  });
+  const reviewer = await prisma.user.findUnique({
+    where: { email: "reviewer@alkaya.ai" },
+  });
+  if (!instructor || !reviewer) return;
+
+  const lesson = await prisma.lesson.findFirst({
+    where: { module: { course: { instructorId: instructor.id } } },
+    include: {
+      module: {
+        include: {
+          course: true,
+        },
+      },
+    },
+  });
+  if (!lesson) return;
+
+  const review = await prisma.contentReview.upsert({
+    where: {
+      lessonId_instructorId: {
+        lessonId: lesson.id,
+        instructorId: instructor.id,
+      },
+    },
+    update: {
+      status: "IN_REVIEW",
+      reviewerId: reviewer.id,
+      summary: "Revisar la narrativa y ritmo de apertura.",
+      checklist: {
+        structure: true,
+        clarity: false,
+        practice: true,
+      },
+    },
+    create: {
+      lessonId: lesson.id,
+      instructorId: instructor.id,
+      reviewerId: reviewer.id,
+      status: "IN_REVIEW",
+      summary: "Revisar la narrativa y ritmo de apertura.",
+      checklist: {
+        structure: true,
+        clarity: false,
+        practice: true,
+      },
+    },
+  });
+
+  await prisma.reviewDecision.create({
+    data: {
+      reviewId: review.id,
+      state: review.status,
+      checklist: review.checklist ?? {},
+      notes: "Inicio de revision",
+      createdById: reviewer.id,
+    },
+  });
+
+  await prisma.reviewFeedback.create({
+    data: {
+      reviewId: review.id,
+      authorId: reviewer.id,
+      anchor: "Introduccion",
+      message:
+        "Falta claridad en la propuesta de valor. Agrega ejemplos concretos al principio.",
+    },
+  });
 }
 
 async function main() {
@@ -851,6 +1254,11 @@ async function main() {
   });
 
   await seedPages();
+  await seedRolePermissions();
+  await seedLegalDocuments();
+  await seedPrograms();
+  await seedNotificationPreferences();
+  await seedContentReviews();
 
   for (const provider of [
     "MercadoPago",

@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth/guards";
 import { Role } from "@prisma/client";
 import { getPagePath } from "@/lib/pages";
+import { createPage } from "@/lib/actions/pages";
+import { PAGE_CATALOG } from "@/config/pages";
+import { SUPPORTED_LOCALES } from "@/lib/i18n";
 
 export default async function PagesList({
   params,
@@ -29,8 +32,49 @@ export default async function PagesList({
         <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
           CMS
         </p>
-        <h1 className="font-heading text-3xl">Paginas publicas</h1>
-      </div>
+      <h1 className="font-heading text-3xl">Paginas publicas</h1>
+      <form
+        action={createPage}
+        className="mt-4 flex flex-wrap items-end gap-3 rounded-2xl border border-black/10 bg-white p-4"
+      >
+        <div>
+          <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+            Página
+          </label>
+          <select
+            name="slug"
+            className="mt-2 w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm"
+          >
+            {PAGE_CATALOG.map((entry) => (
+              <option key={entry.slug} value={entry.slug}>
+                {entry.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+            Idioma
+          </label>
+          <select
+            name="lang"
+            className="mt-2 w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm"
+          >
+            {SUPPORTED_LOCALES.map((locale) => (
+              <option key={locale} value={locale}>
+                {locale}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button
+          type="submit"
+          className="rounded-full bg-ink px-4 py-2 text-xs uppercase tracking-[0.2em] text-white"
+        >
+          Crear página
+        </button>
+      </form>
+    </div>
 
       <div className="glass-panel rounded-2xl p-6">
         <div className="space-y-4">

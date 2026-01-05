@@ -4,8 +4,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { compare } from "bcryptjs";
+import type { Role } from "@prisma/client";
 import { prisma } from "./prisma";
 import { logEvent } from "./logger";
+import { ROLE_HOME } from "@/config/roles";
+import { DEFAULT_LOCALE, isLocale } from "@/config/i18n";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -75,10 +78,46 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        const typedUser = user as { id: string; role?: string; isActive?: boolean };
+        const typedUser = user as {
+          id: string;
+          role?: string;
+          isActive?: boolean;
+          pendingLegalUpdate?: boolean;
+          signedLegalDocumentId?: string | null;
+        };
         token.role = typedUser.role ?? "USER";
         token.userId = typedUser.id;
         token.isActive = typedUser.isActive ?? true;
+        const storedRoles = await prisma.userRole.findMany({
+          where: { userId: typedUser.id },
+          select: { role: true },
+        });
+        const assignedRoles = storedRoles.map((entry) => entry.role);
+        token.roles =
+          assignedRoles.length > 0
+            ? assignedRoles
+            : [typedUser.role ?? (Role.USER as Role)];
+        token.pendingLegalUpdate = Boolean(typedUser.pendingLegalUpdate);
+        token.signedLegalDocumentId = typedUser.signedLegalDocumentId ?? null;
+      }
+      if (!token.roles?.length) {
+        token.roles = [(token.role as Role) ?? Role.USER];
+      }
+      if (!user && token.userId) {
+        const persistedUser = await prisma.user.findUnique({
+          where: { id: token.userId as string },
+          select: {
+            pendingLegalUpdate: true,
+            signedLegalDocumentId: true,
+          },
+        });
+        if (persistedUser) {
+          token.pendingLegalUpdate = Boolean(
+            persistedUser.pendingLegalUpdate
+          );
+          token.signedLegalDocumentId =
+            persistedUser.signedLegalDocumentId ?? null;
+        }
       }
       return token;
     },
@@ -86,9 +125,35 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.userId as string;
         session.user.role = (token.role as string) ?? "USER";
+        session.user.roles = (token.roles as Role[]) ?? [
+          (token.role as Role) ?? Role.USER,
+        ];
+        session.user.pendingLegalUpdate = Boolean(token.pendingLegalUpdate);
+        session.user.signedLegalDocumentId =
+          token.signedLegalDocumentId as string | undefined;
         session.user.isActive = Boolean(token.isActive);
       }
       return session;
+    },
+    async redirect({ url, baseUrl, token }) {
+      try {
+        const resolvedUrl = new URL(url, baseUrl);
+        const [, candidateLocale] = resolvedUrl.pathname.split("/");
+        const locale = isLocale(candidateLocale) ? candidateLocale : DEFAULT_LOCALE;
+        const role = (token?.role as Role) ?? "USER";
+        const isAuthFlow =
+          resolvedUrl.pathname === "/" ||
+          resolvedUrl.pathname.startsWith("/auth") ||
+          resolvedUrl.pathname.startsWith("/api/auth");
+
+        if (isAuthFlow) {
+          const rolePath = ROLE_HOME[role] ?? ROLE_HOME.USER;
+          return `${baseUrl}/${locale}${rolePath}`;
+        }
+      } catch {
+        // Fallback to default on invalid URLs.
+      }
+      return url;
     },
   },
   pages: {

@@ -4,15 +4,22 @@ import { getSession, signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useId, useState } from "react";
 import { DEFAULT_LOCALE, isLocale, type AppLocale } from "@/lib/i18n";
-import esAr from "@/lib/dictionaries/es-ar.json";
-import esMx from "@/lib/dictionaries/es-mx.json";
-import en from "@/lib/dictionaries/en.json";
+import type { AppDictionary } from "@/lib/i18n";
+import { ROLE_HOME } from "@/config/roles";
+import es from "@/config/dictionaries/es.json";
+import en from "@/config/dictionaries/en.json";
+import pt from "@/config/dictionaries/pt.json";
 
-const dictionaries: Record<AppLocale, typeof esAr> = {
-  "es-ar": esAr,
-  "es-mx": esMx,
+import type { Role } from "@prisma/client";
+
+const dictionaries: Record<AppLocale, AppDictionary> = {
+  "es-ar": es,
+  "es-mx": es,
   en,
+  pt,
 };
+
+const getRoleHome = (role?: Role) => ROLE_HOME[role ?? "USER"];
 
 type AuthFormProps = {
   lang: string;
@@ -30,15 +37,6 @@ export default function AuthForm({
   const nextPath = searchParams.get("next");
   const dictionary = dictionaries[isLocale(lang) ? lang : DEFAULT_LOCALE];
   const auth = dictionary.auth;
-  const roleHome: Record<string, string> = {
-    SUPERADMIN: "/super-admin",
-    ADMIN: "/admin",
-    INSTRUCTOR: "/instructor",
-    REVIEWER: "/reviewer",
-    MODERATOR: "/moderator",
-    USER: "/app",
-    SUBSCRIBER: "/app",
-  };
   const [mode, setMode] = useState<"login" | "register">("login");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +66,7 @@ export default function AuthForm({
     }
 
     const session = await getSession();
-    const rolePath = session?.user?.role ? roleHome[session.user.role] : "/app";
+    const rolePath = getRoleHome(session?.user?.role as Role | undefined);
     const target = nextPath ?? rolePath;
     router.push(`/${lang}${target}`);
   }
@@ -100,7 +98,7 @@ export default function AuthForm({
       redirect: false,
     });
     const session = await getSession();
-    const rolePath = session?.user?.role ? roleHome[session.user.role] : "/app";
+    const rolePath = getRoleHome(session?.user?.role as Role | undefined);
     router.push(`/${lang}${rolePath}`);
   }
 

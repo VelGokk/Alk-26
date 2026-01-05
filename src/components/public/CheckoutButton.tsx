@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import dictionary from "@/lib/dictionaries/es-ar.json";
+import dictionary from "@/config/dictionaries/es.json";
 
 export default function CheckoutButton({ disabled }: { disabled?: boolean }) {
   const [loading, setLoading] = useState(false);
