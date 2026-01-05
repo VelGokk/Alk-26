@@ -28,7 +28,16 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "not_found" }, { status: 404 });
   }
 
-  const { default: PDFDocument } = await import("pdfkit");
+  let PDFDocument: any;
+  try {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    PDFDocument = eval("require")("pdfkit");
+  } catch {
+    const mod = await import("pdfkit");
+    PDFDocument = mod.default;
+  }
+
   const doc = new PDFDocument({ margin: 48, size: "A4" });
   const chunks: Buffer[] = [];
 

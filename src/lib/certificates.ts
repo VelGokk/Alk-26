@@ -92,7 +92,17 @@ export async function generateCertificatePdf(certificate: {
   program: { title: string };
 }) {
   return new Promise<Buffer>(async (resolve, reject) => {
-    const { default: PDFDocument } = await import("pdfkit");
+    let PDFDocument: any;
+    try {
+      // Try to require at runtime without static import so Turbopack doesn't bundle fontkit
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      PDFDocument = eval("require")("pdfkit");
+    } catch {
+      const mod = await import("pdfkit");
+      PDFDocument = mod.default;
+    }
+
     const doc = new PDFDocument({
       size: "A4",
       margins: { top: 64, bottom: 64, left: 64, right: 64 },
